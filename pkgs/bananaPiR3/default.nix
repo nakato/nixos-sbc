@@ -151,4 +151,5 @@ rec {
       REGULATOR_MT6380 = yes;
     };
   });
+  linuxPacakges_latest_bananaPiR3 = linuxPacakges_6_7_bananaPiR3;
 }
