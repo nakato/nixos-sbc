@@ -1,0 +1,28 @@
+/* SPDX-License-Identifier: (GPL-2.0-only) */
+/*
+ * Authors: Sachi King <nakato@nakato.io>
+ */
+
+/dts-v1/;
+/plugin/;
+#include <dt-bindings/input/input.h>
+
+/ {
+	compatible = "bananapi,bpi-r3", "mediatek,mt7986a";
+
+	fragment@0 {
+		target-path = "/gpio-keys/reset-key";
+		__overlay__ {
+			status = "disabled";
+		};
+	};
+
+	// Make WPS key be reset just like OpenWRT did, reset might be useful,
+	// meanwhile a WPS key is absolutely useless.
+	fragment@1 {
+		target-path = "/gpio-keys/wps-key";
+		__overlay__ {
+			linux,code = <KEY_RESTART>;
+		};
+	};
+};
