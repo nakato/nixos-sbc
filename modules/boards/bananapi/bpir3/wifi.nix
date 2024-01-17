@@ -6,13 +6,6 @@ let
 in
 {
   options.sbc.board.bananapi.bpir3 = with lib; {
-    enableWiFi = mkOption {
-      type = types.bool;
-      default = true;
-      description = lib.mdDoc ''
-        If enabled, the device will be configured to enable WiFi hardware.
-      '';
-    };
     enableWiFiTrainingData = mkOption {
       type = types.bool;
       default = true;
@@ -31,9 +24,9 @@ in
   config =
     lib.mkMerge [
       (lib.mkIf config.sbc.initialBootstrapImage {
-        sbc.board.bananapi.bpir3.enableWiFi = false;
+        sbc.wireless.wifi.enable = false;
       })
-      (lib.mkIf cfg.enableWiFi {
+      (lib.mkIf config.sbc.wireless.wifi.enable {
         assertions = [
           {
             assertion = config.sbc.board.bananapi.bpir3.enableWiFiTrainingData -> config.sbc.acceptRegulatoryResponsibility;
@@ -47,10 +40,9 @@ in
           }
         ];
 
-        boot.initrd.kernelModules = [ "rfkill" "cfg80211" "mt7915e" ];
+        boot.initrd.kernelModules = [ "mt7915e" ];
 
         hardware.enableRedistributableFirmware = true;
-        hardware.wirelessRegulatoryDatabase = lib.mkForce true;
 
         hardware.deviceTree.overlays = lib.mkIf config.sbc.board.bananapi.bpir3.enableWiFiTrainingData [
           {
