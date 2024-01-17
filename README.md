@@ -29,14 +29,18 @@ Work in progress:
 
 ## Single Board Computers
 
-|       Device  |
-| ------------- |
-| BananaPi R3   |
+| Board Manufacturer | Model           |
+| ------------------ | --------------- |
+| BananaPi           | BPiR3           |
 
 
 ## Supported Devices
 
 Not all devices are supported on all boards.
+
+| Device Class | Device | Requirements |
+| ------------ | ------ | ------------ |
+| RTC          | DS3231 | i2c          |
 
 
 ## Setup
