@@ -8,6 +8,10 @@ let
   cfg = config.sbc;
 in
 {
+  imports = [
+    ./boot
+  ];
+
   options.sbc = with lib; {
     enable = mkEnableOption "Include SBC configuration";
 
