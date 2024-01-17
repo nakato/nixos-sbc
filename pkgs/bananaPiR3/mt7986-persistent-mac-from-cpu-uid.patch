@@ -1,0 +1,80 @@
+Generate Persistent MAC Addr from CPU UID
+
+BananaPi R3 devices lack an assigned UAA MAC, and therefor on each boot
+Linux generates a new MAC address at random.  This is not good for the user,
+resulting in IPv4 and IPv6 addressess changing on every boot.
+
+Use the system CPU ID to give us a stable but unique set of bytes that we then
+hash to get more bytes.  We hash the hash when we need more bytes.
+
+diff --git a/board/mediatek/mt7986/mt7986_rfb.c b/board/mediatek/mt7986/mt7986_rfb.c
+index 846c715ca0..69aa871663 100644
+--- a/board/mediatek/mt7986/mt7986_rfb.c
++++ b/board/mediatek/mt7986/mt7986_rfb.c
+@@ -4,6 +4,55 @@
+  * Author: Sam Shih <sam.shih@mediatek.com>
+  */
+ 
++#include <common.h>
++#include <mapmem.h>
++#include <hash.h>
++#include <u-boot/sha1.h>
++#include <net.h>
++
++int board_late_init(void)
++{
++	void *buf;
++	uint8_t cpuid_digest[20];
++	u8 cpu_uid[8];
++	u8 ethaddr0[6];
++	u8 ethaddr1[6];
++
++	/*
++	 * 	No documentation, but it is said to be a burned in unique ID of the CPU.
++	 * 	https://forum.banana-pi.org/t/bpi-r3-serial-number/14556/4
++	 * 	My two boards, it is both unique and static.
++	 */
++	buf = map_sysmem(0x11d00140, 8);
++	memcpy(cpu_uid, buf, 8);
++	unmap_sysmem(buf);
++
++	sha1_csum(cpu_uid, 8, cpuid_digest);
++
++	memcpy(ethaddr0, cpuid_digest, 6);
++	memcpy(ethaddr1, cpuid_digest, 6);
++
++	ethaddr0[0] &= 0xfe;
++	ethaddr0[0] |= 0x02;
++
++	ethaddr1[0] &= 0xfe;
++	ethaddr1[0] |= 0x02;
++	ethaddr1[5]++;
++
++	if (is_valid_ethaddr(ethaddr0)) {
++		eth_env_set_enetaddr_by_index("eth", 0, ethaddr0);
++	} else {
++		puts("Generated ethaddr0 was invalid\n");
++	}
++	if (is_valid_ethaddr(ethaddr1)) {
++		eth_env_set_enetaddr_by_index("eth", 1, ethaddr1);
++	} else {
++		puts("Generated ethaddr1 was invalid\n");
++	}
++
++	return 0;
++}
++
+ int board_init(void)
+ {
+ 	return 0;
+diff --git a/include/configs/mt7986.h b/include/configs/mt7986.h
+index 0c41af1fc3..a890f9f08e 100644
+--- a/include/configs/mt7986.h
++++ b/include/configs/mt7986.h
+@@ -18,4 +18,6 @@
+ /* DRAM */
+ #define CFG_SYS_SDRAM_BASE		0x40000000
+ 
++#define FDT_SEQ_MACADDR_FROM_ENV
++
+ #endif
