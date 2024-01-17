@@ -16,6 +16,10 @@ in
   options.sbc = with lib; {
     enable = mkEnableOption "Include SBC configuration";
 
+    board.spec = mkOption {
+      type = types.submodule (import ../../lib/board/definition.nix);
+    };
+
     initialBootstrapImage = mkOption {
       type = types.bool;
       default = false;

@@ -29,6 +29,20 @@ in
   config = {
     sbc.enable = true;
 
+    sbc.board.spec = {
+      name = "BananaPi BPi R3";
+      dtRoot = "mediatek,mt7986a";
+      wifi.wifi.status = "okay";
+      i2c.i2c0 = {
+        status = "okay";
+      };
+      uart.uart0 = {
+        status = "okay";
+        baud = 115200;
+        deviceName = "ttyS0";
+      };
+    };
+
     # Custom kernel is required as a lot of MTK components misbehave when built as modules.
     # They fail to load properly, leaving the system without working ethernet, they'll oops on
     # remove. MTK-DSA parts and PCIe were observed to do this.
