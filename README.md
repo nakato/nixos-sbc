@@ -62,6 +62,7 @@ Not all devices are supported on all boards.
     nixosConfigurations = {
       hostname = nixpkgs.lib.nixosSystem {
         modules = [
+          nixos-sbc.nixosModules.default
         ];
       };
     };
