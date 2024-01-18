@@ -11,6 +11,7 @@ in
   imports = [
     ./boot
     ./wireless
+    ./console
   ];
 
   options.sbc = with lib; {

@@ -43,6 +43,8 @@ in
       };
     };
 
+    sbc.console.devices = [ config.sbc.board.spec.uart.uart0 ];
+
     # Custom kernel is required as a lot of MTK components misbehave when built as modules.
     # They fail to load properly, leaving the system without working ethernet, they'll oops on
     # remove. MTK-DSA parts and PCIe were observed to do this.
