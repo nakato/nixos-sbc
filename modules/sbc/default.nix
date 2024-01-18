@@ -17,7 +17,7 @@ in
     enable = mkEnableOption "Include SBC configuration";
 
     board.spec = mkOption {
-      type = types.submodule (import ../../lib/board/definition.nix);
+      type = types.submodule (import ../../lib/board/spec/base.nix);
     };
 
     initialBootstrapImage = mkOption {
