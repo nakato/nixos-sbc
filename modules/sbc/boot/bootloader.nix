@@ -28,7 +28,7 @@ in
     };
   };
 
-  config = lib.mkIf (config.sbc.enabled && cfg.manage && cfg.backend == "uboot") {
+  config = lib.mkIf (config.sbc.enable && cfg.manage && cfg.backend == "uboot") {
     boot.loader.grub.enable = false;
     boot.loader.generic-extlinux-compatible.enable = true;
   };
