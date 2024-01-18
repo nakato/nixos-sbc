@@ -10,8 +10,9 @@ in
 {
   imports = [
     ./boot
-    ./wireless
     ./console
+    ./rtc
+    ./wireless
   ];
 
   options.sbc = with lib; {
