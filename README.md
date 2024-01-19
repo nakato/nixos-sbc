@@ -27,6 +27,7 @@ Alpha (Functional, but subject to change):
 Work in progress:
  * Cachix
  * SD-Card boot images
+   * Single-partition BTRFS layout; no boot partition
 
 
 ## Single Board Computers
@@ -34,6 +35,12 @@ Work in progress:
 | Board Manufacturer | Model           |
 | ------------------ | --------------- |
 | BananaPi           | BPiR3           |
+
+| Icon | Description  |
+| ---- | ------------ |
+| ✓    | Supported    |
+| ✗    | Missing      |
+| ○    | Not Required |
 
 
 ## Supported Devices
