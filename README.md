@@ -20,11 +20,13 @@ This is currently a work in progress.
 Currently included:
  * Packages
 
+Alpha (Functional, but subject to change):
+ * Nix board definitions
+ * Nix device definitions
+
 Work in progress:
  * Cachix
  * SD-Card boot images
- * Nix board definitions
- * Nix device definitions
 
 
 ## Single Board Computers
