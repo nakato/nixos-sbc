@@ -13,7 +13,8 @@ in
 {
   options = {
     sbc.board.i2c.devices = mkOption {
-      type = types.nullOr (types.attrsOf (types.submodule i2cDevice));
+      type = types.attrsOf (types.submodule i2cDevice);
+      default = {};
     };
   };
 
