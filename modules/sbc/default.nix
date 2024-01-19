@@ -9,18 +9,13 @@ let
 in
 {
   imports = [
+    ./board
     ./boot
-    ./console
-    ./rtc
     ./wireless
   ];
 
   options.sbc = with lib; {
     enable = mkEnableOption "Include SBC configuration";
-
-    board.spec = mkOption {
-      type = types.submodule (import ../../lib/board/spec/base.nix);
-    };
 
     initialBootstrapImage = mkOption {
       type = types.bool;

@@ -10,7 +10,9 @@ in
       type = types.bool;
       default = true;
       description = lib.mdDoc ''
-        If enabled, SBC will be configured to enable WiFi hardware, if it has it.
+        Enable generic WiFi configuration for the SBC.  This is independent of
+        wifi hardware.  If WiFi hardware is disabled by default, you will need
+        to enable it independently.
       '';
     };
   };

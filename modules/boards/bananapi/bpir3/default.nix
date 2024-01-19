@@ -29,21 +29,24 @@ in
   config = {
     sbc.enable = true;
 
-    sbc.board.spec = {
+    sbc.board = {
       name = "BananaPi BPi R3";
       dtRoot = "mediatek,mt7986a";
-      wifi.wifi.status = "okay";
-      i2c.i2c0 = {
+
+      i2c.devices.i2c0 = {
         status = "okay";
       };
-      uart.uart0 = {
+
+      uart.devices.uart0 = {
         status = "okay";
         baud = 115200;
         deviceName = "ttyS0";
+        console = true;
       };
+
+      wifi.devices.wifi.status = "okay";
     };
 
-    sbc.console.devices = [ config.sbc.board.spec.uart.uart0 ];
 
     # Custom kernel is required as a lot of MTK components misbehave when built as modules.
     # They fail to load properly, leaving the system without working ethernet, they'll oops on

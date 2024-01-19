@@ -19,6 +19,11 @@
       type = types.int;
       description = mdDoc "Default baud-rate of the hardware, used by software";
     };
+
+    console = mkOption {
+      type = types.bool;
+      description = mdDoc "If true, device will be configured as a console during boot";
+    };
   };
 
   config = {
