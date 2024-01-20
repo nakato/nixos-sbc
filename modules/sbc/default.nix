@@ -30,15 +30,6 @@ in
         wifi being missing once they build their own system.
       '';
     };
-
-    acceptRegulatoryResponsibility = mkOption {
-      type = types.bool;
-      default = false;
-      description = lib.mdDoc ''
-        Assert that you understand you are responsible for ensuring your
-        devices abide by any regulatory domains relevant to your location.
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
