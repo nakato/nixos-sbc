@@ -11,6 +11,7 @@ in
   imports = [
     ./board
     ./boot
+    ./filesystem.nix
     ./wireless
   ];
 

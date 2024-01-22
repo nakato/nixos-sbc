@@ -8,6 +8,7 @@ in
 {
   imports = [
     ./wifi.nix
+    ./sd-image-mt7986.nix
   ];
 
   options.sbc.board.bananapi.bpir3 = with lib; {
