@@ -25,7 +25,7 @@ in
       moduleTargets = removeNullModuleTargets enableTargets;
     in
   {
-    hardware.deviceTree.overlays = builtins.map (d: (import d.enableMethod.dtOverlay) "rtc-${d.target}" d.target config.sbc.board.dtRoot) dtTargets;
+    hardware.deviceTree.overlays = builtins.map (d: (import d.enableMethod.dtOverlay) "rtc-${d.target}" "&${d.target}" config.sbc.board.dtRoot) dtTargets;
     boot.initrd.kernelModules = lib.flatten (builtins.map (d: d.enableMethod.moduleLoad) moduleTargets);
   };
 }
