@@ -31,5 +31,7 @@ in
   config = lib.mkIf (config.sbc.enable && cfg.manage && cfg.backend == "uboot") {
     boot.loader.grub.enable = false;
     boot.loader.generic-extlinux-compatible.enable = true;
+    # gzip is known safe; bz2, lzma and lz4 should work as well, but not zstd.
+    boot.initrd.compressor = lib.mkDefault "gzip";
   };
 }
