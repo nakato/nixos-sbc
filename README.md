@@ -72,8 +72,8 @@ Not all devices are supported on all boards.
       hostname = nixpkgs.lib.nixosSystem {
         modules = [
           nixos-sbc.nixosModules.default
-          nixos-sbc.nixosModules.<BOARD MFG>.<BOARD MODEL>
-          # Ex: nixos-sbc.nixosModules.bananapi.bpir3
+          nixos-sbc.nixosModules.boards.<BOARD MFG>.<BOARD MODEL>
+          # Ex: nixos-sbc.nixosModules.boards.bananapi.bpir3
         ];
       };
     };

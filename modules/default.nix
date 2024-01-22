@@ -1,9 +1,9 @@
-import ./boards
-//
 {
   default = {
     imports = [
       ./sbc
     ];
   };
+
+  boards = import ./boards;
 }
