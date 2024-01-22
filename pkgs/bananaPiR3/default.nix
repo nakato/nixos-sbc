@@ -50,13 +50,15 @@ rec {
       CONFIG_BOARD_LATE_INIT=y
       CONFIG_SHA1=y
       CONFIG_OF_BOARD_SETUP=y
+      # Boot on root ext4 support
+      CONFIG_CMD_EXT4=y
     '';
     filesToInstall = [ "u-boot.bin" ];
     src = fetchurl {
-      url = "ftp://ftp.denx.de/pub/u-boot/u-boot-2023.07-rc3.tar.bz2";
-      hash = "sha256-QuwINnS9MPpMFueMP19FPAjZ9zdZWne13aWVrDoJ2C8=";
+      url = "ftp://ftp.denx.de/pub/u-boot/u-boot-2023.07.02.tar.bz2";
+      hash = "sha256-a2pIWBwUq7D5W9h8GvTXQJIkBte4AQAqn5Ryf93gIdU=";
     };
-    version = "2023.07-rc3";
+    version = "2023.07.02";
   }).overrideAttrs (oldAttrs: {
     nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ pkg-config ncurses ];
     patches = extraPatches;
