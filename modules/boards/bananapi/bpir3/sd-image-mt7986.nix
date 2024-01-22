@@ -5,8 +5,8 @@
 , ...
 }:
 with lib;
-let
-  rootfsImage = pkgs.callPackage (pkgs.path + "/nixos/lib/make-ext4-fs.nix") {
+{
+  system.build.rootfsExt4Image = pkgs.callPackage (pkgs.path + "/nixos/lib/make-ext4-fs.nix") {
     storePaths = config.system.build.toplevel;
     compressImage = false;
     volumeLabel = "root";
@@ -16,7 +16,7 @@ let
       ${config.boot.loader.generic-extlinux-compatible.populateCmd} -c ${config.system.build.toplevel} -d ./files/boot
     '';
   };
-in {
+
   system.build.sdImage = pkgs.callPackage (
     { stdenv, e2fsprogs, gptfdisk, util-linux, uboot }: stdenv.mkDerivation {
       name = "nixos-bananapir3-sd";
@@ -28,7 +28,7 @@ in {
       compressImage = false;
 
       buildCommand = ''
-        root_fs=${rootfsImage}
+        root_fs=${config.system.build.rootfsExt4Image}
 
         mkdir -p $out/nix-support $out/sd-image
         export img=$out/sd-image/nixos-bananapir3-sd.raw
