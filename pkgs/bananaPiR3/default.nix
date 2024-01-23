@@ -54,6 +54,9 @@ rec {
       CONFIG_OF_BOARD_SETUP=y
       # Boot on root ext4 support
       CONFIG_CMD_EXT4=y
+      # Boot on root btrfs support
+      CONFIG_FS_BTRFS=y
+      CONFIG_CMD_BTRFS=y
     '';
     filesToInstall = [ "u-boot.bin" ];
     src = fetchurl {
