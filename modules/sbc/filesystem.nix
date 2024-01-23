@@ -9,7 +9,6 @@ in
   options.sbc.filesystem = with lib; {
     useDefaultLayout = mkOption {
       type = types.enum [ "btrfs" "ext4" false ];
-      default = false;
       description = mdDoc ''
         When a pre-built SD image is used, the filesystem layout will be
         known to us, so by enabling the use of the default layout you do
@@ -21,6 +20,11 @@ in
   };
 
   config = lib.mkMerge [
+    {
+      sbc.filesystem.useDefaultLayout = lib.mkDefault (if config.sbc.bootstrap.enable
+        then config.sbc.bootstrap.rootFilesystem
+        else false);
+    }
     (lib.mkIf (config.sbc.enable && cfg.useDefaultLayout == "btrfs") {
       fileSystems = {
         "/" = {

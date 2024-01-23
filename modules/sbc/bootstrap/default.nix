@@ -58,8 +58,6 @@ in
       }
     ];
 
-    sbc.filesystem.useDefaultLayout = mkDefault (if isBtrfs then "btrfs" else "ext4");
-
     system.build.rootfsImage = let
       rootfsExt4Image = pkgs.callPackage (pkgs.path + "/nixos/lib/make-ext4-fs.nix") {
         storePaths = config.system.build.toplevel;
