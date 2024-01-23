@@ -51,6 +51,13 @@ in
   in mkIf (config.sbc.enable && cfg.enable) {
     assertions = [
       {
+        assertion = !(cfg.rootFilesystem == "btrfs");
+        message = ''
+          BTRFS boot is not yet supported and would produce an unbootable system.
+          Set sbc.bootstrap.rootFilesystem = "ext4" if you want to proceed with ext4.
+        '';
+      }
+      {
         assertion = config.boot.loader.generic-extlinux-compatible.enable;
         message = ''
           SD Image creation only works with generic-extlinux-compatible bootloader.
