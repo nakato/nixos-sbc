@@ -8,19 +8,28 @@ in
 {
   options.sbc.filesystem = with lib; {
     useDefaultLayout = mkOption {
-      type = types.enum [ "ext4" false ];
+      type = types.enum [ "btrfs" "ext4" false ];
       default = false;
       description = mdDoc ''
         When a pre-built SD image is used, the filesystem layout will be
         known to us, so by enabling the use of the default layout you do
         not need to specify it yourself.
 
-        Options are false or "ext4".
+        Options are false, "btrfs" or "ext4".
       '';
     };
   };
 
   config = lib.mkMerge [
+    (lib.mkIf (config.sbc.enable && cfg.useDefaultLayout == "btrfs") {
+      fileSystems = {
+        "/" = {
+          device = "/dev/disk/by-uuid/18db6211-ac36-42c1-a22f-5e15e1486e0d";
+          fsType = "btrfs";
+          options = [ "compress=zstd" ];
+        };
+      };
+    })
     (lib.mkIf (config.sbc.enable && cfg.useDefaultLayout == "ext4") {
       fileSystems = {
         "/" = {

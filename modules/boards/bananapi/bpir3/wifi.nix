@@ -24,7 +24,7 @@ in
 
   config =
     lib.mkMerge [
-      (lib.mkIf config.sbc.initialBootstrapImage {
+      (lib.mkIf config.sbc.bootstrap.initialBootstrapImage {
         sbc.wireless.wifi.enable = false;
       })
       (lib.mkIf config.sbc.wireless.wifi.enable {

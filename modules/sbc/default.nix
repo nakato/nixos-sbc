@@ -11,26 +11,13 @@ in
   imports = [
     ./board
     ./boot
+    ./bootstrap
     ./filesystem.nix
     ./wireless
   ];
 
   options.sbc = with lib; {
     enable = mkEnableOption "Include SBC configuration";
-
-    initialBootstrapImage = mkOption {
-      type = types.bool;
-      default = false;
-      visible = false;
-      description = ''
-        This option is used to change defaults for producing bootstrap images.
-
-        For example, setting WiFi as disabled for generic bootstrap images while
-        leaving it as enabled for user use.  This is so we can bubble the regulatory
-        info up as a default-error to the user so they don't get supprised by the
-        wifi being missing once they build their own system.
-      '';
-    };
   };
 
   config = lib.mkIf cfg.enable {
