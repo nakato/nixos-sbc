@@ -26,6 +26,9 @@ rec {
     extraPatches = extraPatches;
     postPatch = ''
       cp ${./mt7986-nixos.env} board/mediatek/mt7986/mt7986-nixos.env
+      # Should include via CONFIG_DEVICE_TREE_INCLUDES, but I give up, I do
+      # that and make forgets how to compile dtbs.  Happens sometime afer 2023.07.
+      cp ${./mt7986-mmcboot.dtsi} arch/arm/dts/mt7986a-bpi-r3-sd-u-boot.dtsi
     '';
     extraConfig = ''
       CONFIG_AUTOBOOT=y
@@ -35,7 +38,6 @@ rec {
       CONFIG_BOOTSTD_DEFAULTS=y
       CONFIG_BOOTSTD_FULL=y
       CONFIG_CMD_BOOTFLOW_FULL=y
-      CONFIG_DEVICE_TREE_INCLUDES="${./mt7986-mmcboot.dtsi}"
       CONFIG_ENV_SOURCE_FILE="mt7986-nixos"
       # Unessessary as it's not actually used anywhere, value copied verbatum into env
       CONFIG_DEFAULT_FDT_FILE="mediatek/mt7986a-bananapi-bpi-r3.dtb"
@@ -55,13 +57,14 @@ rec {
     '';
     filesToInstall = [ "u-boot.bin" ];
     src = fetchurl {
-      url = "ftp://ftp.denx.de/pub/u-boot/u-boot-2023.07.02.tar.bz2";
-      hash = "sha256-a2pIWBwUq7D5W9h8GvTXQJIkBte4AQAqn5Ryf93gIdU=";
+      url = "ftp://ftp.denx.de/pub/u-boot/u-boot-2024.01.tar.bz2";
+      hash = "sha256-uZYR8e0je/NUG9yENLaMlqbgWWcGH5kkQ8swqr6+9bM=";
     };
-    version = "2023.07.02";
+    version = "2024.01";
   }).overrideAttrs (oldAttrs: {
     nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [ pkg-config ncurses ];
     patches = extraPatches;
+    makeFlags = [ "DTC=${dtc}/bin/dtc" ];
   });
 
   # TODO: Remove fip from extraMakeFlags, and do not pass uboot into this build.
