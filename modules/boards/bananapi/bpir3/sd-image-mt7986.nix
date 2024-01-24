@@ -7,19 +7,23 @@
 with lib;
 {
   system.build.sdImage = pkgs.callPackage (
-    { stdenv, e2fsprogs, gptfdisk, util-linux, uboot }: stdenv.mkDerivation {
-      name = "nixos-bananapir3-sd";
+    { stdenv, e2fsprogs, gptfdisk, util-linux, uboot }:
+    let
+      name = "nixos-sd-${config.sbc.board.vendor}-${config.sbc.board.model}";
+      imageName = "${name}-v${config.sbc.version}.raw";
+    in
+    stdenv.mkDerivation {
+      inherit name;
       nativeBuildInputs = [
         e2fsprogs gptfdisk util-linux
       ];
       buildInputs = [ uboot ];
-      imageName = "nixos-bananapir3-sd";
 
       buildCommand = ''
         root_fs=${config.system.build.rootfsImage}
 
         mkdir -p $out/nix-support $out/sd-image
-        export img=$out/sd-image/nixos-bananapir3-sd.raw
+        export img=$out/sd-image/${imageName}
 
         echo "${pkgs.stdenv.buildPlatform.system}" > $out/nix-support/system
         echo "file sd-image $img" >> $out/nix-support/hydra-build-products
