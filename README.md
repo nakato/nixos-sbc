@@ -51,7 +51,7 @@ Not all devices are supported on all boards.
 
 | Device Class | Device | Requirements | Documentation |
 | ------------ | ------ | ------------ | ------------- |
-| RTC          | DS3231 | i2c          | [Link](./devices/rtc/ds3231/README.md) |
+| RTC          | DS3231 | i2c          | [Link](./lib/devices/rtc/ds3231/README.md) |
 
 
 ## Setup
