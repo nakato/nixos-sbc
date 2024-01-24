@@ -50,5 +50,7 @@ in
       sbcPkgs = pkgs.callPackage ../../pkgs { };
       sbcLibPath = ../../lib;
     };
+
+    zramSwap.enable = lib.mkDefault true;
   };
 }
