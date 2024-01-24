@@ -7,15 +7,16 @@
 with lib;
 {
   system.build.sdImage = pkgs.callPackage (
-    { stdenv, e2fsprogs, gptfdisk, util-linux, uboot }:
+    { stdenv, e2fsprogs, gptfdisk, util-linux, uboot, zstd }:
     let
       name = "nixos-sd-${config.sbc.board.vendor}-${config.sbc.board.model}";
+      compress = true;
       imageName = "${name}-v${config.sbc.version}.raw";
     in
     stdenv.mkDerivation {
       inherit name;
       nativeBuildInputs = [
-        e2fsprogs gptfdisk util-linux
+        e2fsprogs gptfdisk util-linux zstd
       ];
       buildInputs = [ uboot ];
 
@@ -26,7 +27,7 @@ with lib;
         export img=$out/sd-image/${imageName}
 
         echo "${pkgs.stdenv.buildPlatform.system}" > $out/nix-support/system
-        echo "file sd-image $img" >> $out/nix-support/hydra-build-products
+        echo "file sd-image $img${if compress then ".zst" else ""}" >> $out/nix-support/hydra-build-products
 
         ## Sector Math
         # Can go anywhere?  Does it look for "bl2" as a name?
@@ -74,6 +75,10 @@ with lib;
 
         # Copy root filesystem
         dd conv=notrunc if=$root_fs of=$img seek=$rootPartStart
+
+        if [ ${builtins.toString compress} = 1 ]; then
+          zstd --rm -T0 -19 $img
+        fi
       '';
     }
   ) { uboot = sbcPkgs.armTrustedFirmwareMT7986; };
