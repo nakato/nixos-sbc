@@ -32,7 +32,8 @@ in
     sbc.enable = true;
 
     sbc.board = {
-      name = "BananaPi BPiR3";
+      vendor = "BananaPi";
+      model = "BPiR3";
       dtRoot = "mediatek,mt7986a";
 
       i2c.devices.i2c0 = {

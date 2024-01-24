@@ -12,7 +12,7 @@ in
       git
     ];
 
-    networking.hostName = removeStrSpaces config.sbc.board.name;
+    networking.hostName = lib.toLower (removeStrSpaces "${config.sbc.board.vendor}-${config.sbc.board.model}");
 
     services.openssh = {
       enable = true;
