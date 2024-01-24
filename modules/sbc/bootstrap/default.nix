@@ -24,7 +24,7 @@ in
 
     rootFilesystem = mkOption {
       type = types.enum [ "btrfs" "ext4" ];
-      default = "btrfs";
+      default = "ext4";
       description = mdDoc ''
         Format for root filesystem.
       '';
