@@ -8,6 +8,10 @@ let
   cfg = config.sbc.bootstrap;
 in
 {
+  imports = [
+    ./initial.nix
+  ];
+
   options.sbc.bootstrap = with lib; {
     enable = mkOption {
       type = types.bool;

@@ -7,6 +7,7 @@ let
 in
 {
   imports = [
+    ./bootstrap.nix
     ./wifi.nix
     ./sd-image-mt7986.nix
   ];
@@ -31,7 +32,7 @@ in
     sbc.enable = true;
 
     sbc.board = {
-      name = "BananaPi BPi R3";
+      name = "BananaPi BPiR3";
       dtRoot = "mediatek,mt7986a";
 
       i2c.devices.i2c0 = {

@@ -19,6 +19,9 @@ This is currently a work in progress.
 
 Currently included:
  * Packages
+ * Image creation, single ext4 partition
+   * Customised image
+   * Bootstrap image
 
 Alpha (Functional, but subject to change):
  * Nix board definitions
@@ -26,15 +29,14 @@ Alpha (Functional, but subject to change):
 
 Work in progress:
  * Cachix
- * SD-Card boot images
-   * Single-partition BTRFS layout; no boot partition
+ * Image creation, single BTRFS partition
 
 
 ## Single Board Computers
 
-| Board Manufacturer | Model           |
-| ------------------ | --------------- |
-| BananaPi           | BPiR3           |
+| Board Manufacturer | Model           | Bootable |
+| ------------------ | --------------- | -------- |
+| BananaPi           | BPiR3           | ✓        |
 
 | Icon | Description  |
 | ---- | ------------ |
@@ -72,11 +74,31 @@ Not all devices are supported on all boards.
       hostname = nixpkgs.lib.nixosSystem {
         modules = [
           nixos-sbc.nixosModules.default
-          nixos-sbc.nixosModules.boards.<BOARD MFG>.<BOARD MODEL>
           # Ex: nixos-sbc.nixosModules.boards.bananapi.bpir3
+          nixos-sbc.nixosModules.boards.<BOARD MFG>.<BOARD MODEL>
+          {
+            sbc.version = "0.1";
+
+            # User config, networking, etc
+          }
         ];
       };
     };
   };
 }
 ```
+
+Produce your customised image with:
+```
+nix build '/path/to/your-flake-repo#nixosConfigurations.hostname.config.system.build.sdImage'
+```
+
+## Bootstrap images
+
+Bootstrap images are provided for use when a board of the same architecture
+as the target, with nix installed, is not available to produce a pre-customised
+image.
+
+Once the image is provisioned onto the SD card, the device will DHCP on all
+available interfaces.  Log into the root user with the password
+`SBCDefaultBootstrapPassword`, then change the password with `passwd`.
