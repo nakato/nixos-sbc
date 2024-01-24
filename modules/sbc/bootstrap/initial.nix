@@ -11,6 +11,7 @@ in
       # Provide git by default as it is required to work with flakes.
       git
     ];
+    nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
     networking.hostName = lib.toLower (removeStrSpaces "${config.sbc.board.vendor}-${config.sbc.board.model}");
 
