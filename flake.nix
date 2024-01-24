@@ -21,5 +21,19 @@
     );
 
     nixosModules = import ./modules;
+
+    nixosConfigurations = {
+      bananapi-bpir3 = nixpkgs.lib.nixosSystem {
+        system = "aarch64-linux";
+        modules = [
+          self.nixosModules.default
+          self.nixosModules.boards.bananapi.bpir3
+          {
+            sbc.bootstrap.initialBootstrapImage = true;
+            sbc.version = "0.1";
+          }
+        ];
+      };
+    };
   };
 }
