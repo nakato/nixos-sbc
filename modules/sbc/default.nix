@@ -52,5 +52,7 @@ in
     };
 
     zramSwap.enable = lib.mkDefault true;
+
+    nix.settings.auto-optimise-store = lib.mkDefault true;
   };
 }
