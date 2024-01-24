@@ -32,6 +32,6 @@ in
   };
 
   config = {
-    enable = mkDefault (config.status != "disabled");
+    enable = mkOptionDefault (config.status != "disabled");
   };
 }
