@@ -26,8 +26,11 @@ rec {
     extraPatches = extraPatches;
     postPatch = ''
       cp ${./mt7986-nixos.env} board/mediatek/mt7986/mt7986-nixos.env
-      # Should include via CONFIG_DEVICE_TREE_INCLUDES, but I give up, I do
-      # that and make forgets how to compile dtbs.  Happens sometime afer 2023.07.
+      # Should include via CONFIG_DEVICE_TREE_INCLUDES, but regression in
+      # makefile is causing issues.
+      # Regression caused by a958988b62eb9ad33c0f41b4482cfbba4aa71564.
+      #
+      # For now, work around issue by copying dtsi into tree for inclusion.
       cp ${./mt7986-mmcboot.dtsi} arch/arm/dts/mt7986a-bpi-r3-sd-u-boot.dtsi
     '';
     extraConfig = ''
