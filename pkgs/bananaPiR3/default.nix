@@ -25,6 +25,9 @@ rec {
     extraMeta.platforms = ["aarch64-linux"];
     extraPatches = extraPatches;
     postPatch = ''
+      patchShebangs tools
+      patchShebangs scripts
+
       cp ${./mt7986-nixos.env} board/mediatek/mt7986/mt7986-nixos.env
       # Should include via CONFIG_DEVICE_TREE_INCLUDES, but regression in
       # makefile is causing issues.
