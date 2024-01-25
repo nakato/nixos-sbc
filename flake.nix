@@ -47,6 +47,11 @@
           self.nixosModules.boards.pine64.rock64v2
         ];
       };
+      pine64-rock64v3 = bootstrapSystem {
+        modules = [
+          self.nixosModules.boards.pine64.rock64v3
+        ];
+      };
     };
   };
 }
