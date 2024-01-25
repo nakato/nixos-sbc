@@ -131,7 +131,7 @@ in
       ext4ResizeCommands = ''
         ${pkgs.e2fsprogs}/bin/resize2fs $rootPart
       '';
-      resizeCommands = if cfg.rootFilesystem == "btrfs" then btrfsResizeCommands else ext4ResizeCommands;
+      resizeCommands = if (builtins.elem cfg.rootFilesystem [ "btrfs" "btrfs-subvol" ]) then btrfsResizeCommands else ext4ResizeCommands;
     in
     ''
       # On the first boot do some maintenance tasks
@@ -140,6 +140,8 @@ in
         set -x
         # Figure out device names for the boot device and root filesystem.
         rootPart=$(${pkgs.util-linux}/bin/findmnt -n -o SOURCE /)
+        # Remove BTRFS SubVol from rootPart if it exists
+        rootPart=''${rootPart//\[*/}
         rootDevice=$(lsblk -npo PKNAME $rootPart)
         partNum=$(lsblk -npo MAJ:MIN $rootPart | ${pkgs.gawk}/bin/awk -F: '{print $2}')
 
