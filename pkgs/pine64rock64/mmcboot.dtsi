@@ -2,7 +2,7 @@
 	bootstd {
 		compatible = "u-boot,boot-std";
 
-		filename-prefixes = "/boot/", "/";
+		filename-prefixes = "/@boot/", "/boot/", "/";
 		bootdev-order = "mmc1", "mmc0";
 
 		extlinux {

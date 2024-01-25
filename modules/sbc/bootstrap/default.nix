@@ -27,7 +27,7 @@ in
     };
 
     rootFilesystem = mkOption {
-      type = types.enum [ "btrfs" "ext4" ];
+      type = types.enum [ "btrfs-subvol" "btrfs" "ext4" ];
       default = "ext4";
       description = mdDoc ''
         Format for root filesystem.
@@ -79,12 +79,45 @@ in
         compressImage = false;
         volumeLabel = "root";
         uuid = "18db6211-ac36-42c1-a22f-5e15e1486e0d";
-        populateImageCommands = ''
+        populateImageCommands =
+        let
+          ramify = ''
+            touch ./files/NIXOS_RAMIFY
+          '';
+        in ''
           mkdir ./files/boot
           ${config.boot.loader.generic-extlinux-compatible.populateCmd} -c ${config.system.build.toplevel} -d ./files/boot
-        '';
+        '' + (if cfg.rootFilesystem == "btrfs-subvol" then ramify else "");
       };
-    in if cfg.rootFilesystem == "btrfs" then rootfsBtrfsImage else rootfsExt4Image;
+    in if (builtins.elem cfg.rootFilesystem [ "btrfs" "btrfs-subvol" ]) then rootfsBtrfsImage else rootfsExt4Image;
+
+    # postResumeCommands is right before mount happens, and after a bunch of helper functions are defined.
+    boot.initrd.postResumeCommands = let
+      # Root device should become /nix so users can go directly to impermanence.
+      # But that's not supported yet with the whole /nix-path-registration thing
+      rootDevice = (builtins.head (builtins.filter (fs: fs.mountPoint == "/") config.system.build.fileSystems)).device;
+    in lib.mkIf (cfg.rootFilesystem == "btrfs-subvol") ''
+      mkdir -p $targetRoot
+      ramifyDevice=${rootDevice}
+      mount -t btrfs -o compress=zstd $ramifyDevice $targetRoot
+      if [ -f $targetRoot/NIXOS_RAMIFY -a ! -d $targetRoot/@ ]; then
+        ${pkgs.btrfs-progs}/bin/btrfs subvolume create $targetRoot/@nix
+        ${pkgs.btrfs-progs}/bin/btrfs subvolume create $targetRoot/@boot
+        ${pkgs.btrfs-progs}/bin/btrfs subvolume create $targetRoot/@
+
+        cp -a --reflink $targetRoot/nix/* $targetRoot/@nix/
+        rm -rf $targetRoot/nix
+
+        cp -a --reflink $targetRoot/boot/* $targetRoot/@boot/
+        rm -rf $targetRoot/boot
+
+        find $targetRoot -mindepth 1 -maxdepth 1 -not -path "$targetRoot/@*" -exec cp -a --reflink {} $targetRoot/@ \;
+        find $targetRoot -mindepth 1 -maxdepth 1 -not -path "$targetRoot/@*" -exec rm -rf {} \;
+
+        rm $targetRoot/@/NIXOS_RAMIFY
+      fi
+      umount $targetRoot
+    '';
 
     boot.postBootCommands =
     let
