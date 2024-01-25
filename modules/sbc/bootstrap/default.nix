@@ -28,7 +28,6 @@ in
 
     rootFilesystem = mkOption {
       type = types.enum [ "btrfs-subvol" "btrfs" "ext4" ];
-      default = "ext4";
       description = mdDoc ''
         Format for root filesystem.
       '';
@@ -50,9 +49,14 @@ in
     };
   };
 
-  config = let
-    isBtrfs = cfg.rootFilesystem == "btrfs";
-  in mkIf (config.sbc.enable && cfg.enable) {
+  config = mkMerge [
+  (mkIf (config.sbc.version == "0.1") {
+    sbc.bootstrap.rootFilesystem = lib.mkOptionDefault "ext4";
+  })
+  (mkIf (versionAtLeast config.sbc.version "0.2") {
+    sbc.bootstrap.rootFilesystem = lib.mkOptionDefault "btrfs-subvol";
+  })
+  (mkIf (config.sbc.enable && cfg.enable) {
     assertions = [
       {
         assertion = config.boot.loader.generic-extlinux-compatible.enable;
@@ -155,5 +159,6 @@ in
         rm -f /nix-path-registration
       fi
     '';
-  };
+  })
+  ];
 }

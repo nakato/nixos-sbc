@@ -20,7 +20,7 @@ in
     enable = mkEnableOption "Include SBC configuration";
 
     version = mkOption {
-      type = types.enum [ "99.99" "0.1" ];
+      type = types.enum [ "99.99" "0.2" "0.1" ];
       default = "99.99";
       description = mdDoc ''
         Configuration version used on generated system.

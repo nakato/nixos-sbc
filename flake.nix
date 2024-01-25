@@ -20,7 +20,7 @@
             self.nixosModules.default
             {
               sbc.bootstrap.initialBootstrapImage = true;
-              sbc.version = "0.1";
+              sbc.version = "0.2";
             }
           ];
         }

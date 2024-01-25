@@ -19,9 +19,10 @@ This is currently a work in progress.
 
 Currently included:
  * Packages
- * Image creation, single ext4 partition
-   * Customised image
-   * Bootstrap image
+ * Image creation
+   * Single BTRFS partition with subvolumes (default)
+   * Single BTRFS partition
+   * Single ext4 partition
 
 Alpha (Functional, but subject to change):
  * Nix board definitions
@@ -29,7 +30,6 @@ Alpha (Functional, but subject to change):
 
 Work in progress:
  * Cachix
- * Image creation, single BTRFS partition
 
 
 ## Single Board Computers
@@ -79,7 +79,7 @@ Not all devices are supported on all boards.
           # Ex: nixos-sbc.nixosModules.boards.bananapi.bpir3
           nixos-sbc.nixosModules.boards.<BOARD MFG>.<BOARD MODEL>
           {
-            sbc.version = "0.1";
+            sbc.version = "0.2";
 
             # User config, networking, etc
           }
