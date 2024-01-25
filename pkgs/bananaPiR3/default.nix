@@ -33,8 +33,9 @@ rec {
       # makefile is causing issues.
       # Regression caused by a958988b62eb9ad33c0f41b4482cfbba4aa71564.
       #
-      # For now, work around issue by copying dtsi into tree for inclusion.
-      cp ${./mt7986-mmcboot.dtsi} arch/arm/dts/mt7986a-bpi-r3-sd-u-boot.dtsi
+      # For now, work around issue by copying dtsi into tree and referencing¬
+      # it in extraConfig using the relative path.¬
+      cp ${./mt7986-mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
     '';
     extraConfig = ''
       CONFIG_AUTOBOOT=y
@@ -45,6 +46,7 @@ rec {
       CONFIG_BOOTSTD_FULL=y
       CONFIG_CMD_BOOTFLOW_FULL=y
       CONFIG_ENV_SOURCE_FILE="mt7986-nixos"
+      CONFIG_DEVICE_TREE_INCLUDES="nixos-mmcboot.dtsi"
       # Unessessary as it's not actually used anywhere, value copied verbatum into env
       CONFIG_DEFAULT_FDT_FILE="mediatek/mt7986a-bananapi-bpi-r3.dtb"
       # Big kernels
