@@ -12,7 +12,7 @@ in
   system.build.sdImage = pkgs.callPackage (
     { stdenv, e2fsprogs, gptfdisk, util-linux, uboot, zstd }:
     let
-      name = "nixos-sd-${config.sbc.board.vendor}-${config.sbc.board.model}";
+      name = "nixos-sd-${config.sbc.board.vendor}-${config.sbc.board.model}${config.sbc.board.pine64.rock64.hardwareRevision}";
       compress = true;
       imageName = "${name}-v${config.sbc.version}.raw";
     in
