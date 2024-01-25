@@ -21,16 +21,6 @@ in
         v2 boards need special consideration to prevent memory corruption.
       '';
     };
-
-    rtc = mkOption {
-      type = types.bool;
-      default = false;
-      description = mdDoc ''
-        The rock64 board has a RTC module available in its PMIC.  The v2
-        board does not expose a battery connector.  The v3 board requires
-        a battery to be added for it to be useful.
-      '';
-    };
   };
 
   config = {
@@ -52,10 +42,12 @@ in
         deviceName = "ttyS2";
         console = true;
       };
+
+      rtc.devices.rk808 = {
+        status = "always";
+        disableMethod.blacklistedKernelModules = [ "rtc_rk808" ];
+        enable = lib.mkDefault false;
+      };
     };
-
-    boot.blacklistedKernelModules = lib.mkIf (!cfg.rtc) [ "rtc_rk808" ];
-
   };
-
 }
