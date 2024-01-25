@@ -44,8 +44,7 @@
       };
       pine64-rock64v2 = bootstrapSystem {
         modules = [
-          self.nixosModules.boards.pine64.rock64
-          { sbc.board.pine64.rock64.hardwareRevision = "v2"; }
+          self.nixosModules.boards.pine64.rock64v2
         ];
       };
     };
