@@ -5,11 +5,28 @@ let
     options = {
       dtOverlay = mkOption {
         # this made to be the imported function instead of a path?
-        type = types.path;
+        type = types.nullOr types.path;
+        default = null;
       };
 
       moduleLoad = mkOption {
         type = types.nullOr (types.listOf (types.str));
+        default = null;
+      };
+    };
+  };
+
+  disableOption = {config, globalConfig, ...}: {
+    options = {
+      dtOverlay = mkOption {
+        # this made to be the imported function instead of a path?
+        type = types.nullOr types.path;
+        default = null;
+      };
+
+      blacklistedKernelModules = mkOption {
+        type = types.nullOr (types.listOf (types.str));
+        default = null;
       };
     };
   };
@@ -29,9 +46,13 @@ in
     enableMethod = mkOption {
       type = types.nullOr (types.submoduleWith { modules = [ enableOption ]; });
     };
+
+    disableMethod = mkOption {
+      type = types.nullOr (types.submoduleWith { modules = [ disableOption ]; });
+    };
   };
 
   config = {
-    enable = mkDefault (config.status != "disabled");
+    enable = mkOptionDefault (config.status != "disabled");
   };
 }

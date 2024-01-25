@@ -37,6 +37,8 @@ Work in progress:
 | Board Manufacturer | Model           | Bootable |
 | ------------------ | --------------- | -------- |
 | BananaPi           | BPiR3           | ✓        |
+| Pine64             | Rock64          | ✓        |
+
 
 | Icon | Description  |
 | ---- | ------------ |
