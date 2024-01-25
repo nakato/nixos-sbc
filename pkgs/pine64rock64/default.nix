@@ -1,5 +1,6 @@
 { dtc
 , fetchurl
+, fetchpatch
 , ubootRock64
 , ubootRock64v2
 , ...}:
@@ -35,7 +36,13 @@ let
     };
     version = "2024.01";
     # No RPi patches
-    patches = [];
+    patches = [
+      (fetchpatch {
+        name = "u-boot-fs-btrfs-fix-reading-when-length-specified.patch";
+        url = "https://patchwork.ozlabs.org/project/uboot/patch/20231111151904.149009-1-CFSworks@gmail.com/raw/";
+        hash = "sha256-nn7hPvjxNUji9nCAJNGLV4bvL5j0LrkL8FiyYM6lFsA=";
+      })
+    ];
     makeFlags = [ "DTC=${dtc}/bin/dtc" ];
   };
 in
