@@ -51,10 +51,8 @@ with lib;
         rootPartStart=$((fipEnd + 1))
         rootPartEnd=$((rootPartStart + rootSizeBlocks - 1))
 
-        # Image size is firmware + boot + root + 100s
         # Last 100s is being lazy about GPT backup, which should be 36s is size.
-
-        imageSize=$((fipEnd + 1 + bootSizeBlocks + rootSizeBlocks + 100))
+        imageSize=$((rootPartEnd + 100))
         imageSizeB=$((imageSize * 512))
 
         truncate -s $imageSizeB $img
