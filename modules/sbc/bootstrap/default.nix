@@ -103,6 +103,7 @@ in
     in lib.mkIf (cfg.rootFilesystem == "btrfs-subvol") ''
       mkdir -p $targetRoot
       ramifyDevice=${rootDevice}
+      waitDevice "$ramifyDevice"
       mount -t btrfs -o compress=zstd $ramifyDevice $targetRoot
       if [ -f $targetRoot/NIXOS_RAMIFY -a ! -d $targetRoot/@ ]; then
         ${pkgs.btrfs-progs}/bin/btrfs subvolume create $targetRoot/@nix
