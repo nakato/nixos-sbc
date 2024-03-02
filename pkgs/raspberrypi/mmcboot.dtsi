@@ -1,0 +1,12 @@
+/ {
+	bootstd {
+		compatible = "u-boot,boot-std";
+
+		filename-prefixes = "/@boot/", "/boot/", "/";
+		bootdev-order = "mmc", "usb", "pxe", "dhcp";
+
+		extlinux {
+			compatible = "u-boot,extlinux";
+		};
+	};
+};
