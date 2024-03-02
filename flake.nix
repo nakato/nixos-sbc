@@ -52,6 +52,11 @@
           self.nixosModules.boards.pine64.rock64v3
         ];
       };
+      raspberrypi-rpi4 = bootstrapSystem {
+        modules = [
+          self.nixosModules.boards.raspberrypi.rpi4
+        ];
+      };
     };
   };
 }
