@@ -3,35 +3,45 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , ...
-  }:
-  let
-    systems = [ "aarch64-linux" "riscv64-linux" ];
+  outputs = {
+    self,
+    nixpkgs,
+    ...
+  }: let
+    systems = ["aarch64-linux" "riscv64-linux"];
     forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
 
-    bootstrapSystem = {modules, system ? "aarch64-linux", ... }@config: nixpkgs.lib.nixosSystem (
+    bootstrapSystem = {
+      modules,
+      system ? "aarch64-linux",
+      ...
+    } @ config:
+      nixpkgs.lib.nixosSystem (
         config
         // {
           inherit system;
-          modules = modules ++ [
-            self.nixosModules.default
-            {
-              sbc.bootstrap.initialBootstrapImage = true;
-              sbc.version = "0.2";
-            }
-          ];
+          modules =
+            modules
+            ++ [
+              self.nixosModules.default
+              {
+                sbc.bootstrap.initialBootstrapImage = true;
+                sbc.version = "0.2";
+              }
+            ];
         }
       );
-  in
-  {
-    packages = forAllSystems (system:
-      let
+  in {
+    formatter = forAllSystems (
+      system:
+        nixpkgs.legacyPackages.${system}.alejandra
+    );
+
+    packages = forAllSystems (
+      system: let
         pkgs = nixpkgs.legacyPackages.${system};
       in
-      import ./pkgs { inherit pkgs; }
+        import ./pkgs {inherit pkgs;}
     );
 
     nixosModules = import ./modules;

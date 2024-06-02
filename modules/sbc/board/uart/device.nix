@@ -1,7 +1,12 @@
-{config, lib, ...}: with lib; {
+{
+  config,
+  lib,
+  ...
+}:
+with lib; {
   options = {
     status = mkOption {
-      type = types.enum [ "disabled" "okay" "always" ];
+      type = types.enum ["disabled" "okay" "always"];
       description = mdDoc "Status of hardware in DT";
     };
 

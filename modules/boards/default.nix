@@ -1,5 +1,5 @@
 {
- bananapi = import ./bananapi;
- pine64 = import ./pine64;
- raspberrypi = import ./raspberrypi;
+  bananapi = import ./bananapi;
+  pine64 = import ./pine64;
+  raspberrypi = import ./raspberrypi;
 }

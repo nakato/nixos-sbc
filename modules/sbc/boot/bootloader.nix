@@ -1,13 +1,12 @@
-{ config
-, lib
-, options
-, pkgs
-, ...
-}:
-let
-  cfg = config.sbc.boot.bootloader;
-in
 {
+  config,
+  lib,
+  options,
+  pkgs,
+  ...
+}: let
+  cfg = config.sbc.boot.bootloader;
+in {
   options.sbc.boot.bootloader = with lib; {
     manage = mkOption {
       type = types.bool;
@@ -19,7 +18,7 @@ in
     };
 
     backend = mkOption {
-      type = types.enum [ "uboot" ];
+      type = types.enum ["uboot"];
       default = "uboot";
       description = lib.mdDoc ''
         The type of bootloader in use.  Used to configure other settings.

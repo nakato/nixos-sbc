@@ -1,14 +1,17 @@
-{ dtc
-, fetchurl
-, fetchpatch
-, ubootRock64
-, ubootRock64v2
-, ...}:
-let
+{
+  dtc,
+  fetchurl,
+  fetchpatch,
+  ubootRock64,
+  ubootRock64v2,
+  ...
+}: let
   overrideUbootAttrs = oldAttrs: {
-    postPatch = oldAttrs.postPatch + ''
-      cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
-    '';
+    postPatch =
+      oldAttrs.postPatch
+      + ''
+        cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
+      '';
     extraConfig = ''
       CONFIG_AUTOBOOT=y
       CONFIG_BOOTDELAY=1
@@ -43,10 +46,9 @@ let
         hash = "sha256-nn7hPvjxNUji9nCAJNGLV4bvL5j0LrkL8FiyYM6lFsA=";
       })
     ];
-    makeFlags = [ "DTC=${dtc}/bin/dtc" ];
+    makeFlags = ["DTC=${dtc}/bin/dtc"];
   };
-in
-{
+in {
   ubootRock64 = ubootRock64.overrideAttrs overrideUbootAttrs;
   ubootRock64v2 = ubootRock64v2.overrideAttrs overrideUbootAttrs;
 }

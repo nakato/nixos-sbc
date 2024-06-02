@@ -1,11 +1,11 @@
-{ config
-, lib
-, sbcPkgs
-, ...}:
-let
-  cfg = config.sbc.board.bananapi.bpir3;
-in
 {
+  config,
+  lib,
+  sbcPkgs,
+  ...
+}: let
+  cfg = config.sbc.board.bananapi.bpir3;
+in {
   imports = [
     ./bootstrap.nix
     ./wifi.nix
@@ -50,7 +50,6 @@ in
       wifi.devices.wifi.status = "okay";
     };
 
-
     # Custom kernel is required as a lot of MTK components misbehave when built as modules.
     # They fail to load properly, leaving the system without working ethernet, they'll oops on
     # remove. MTK-DSA parts and PCIe were observed to do this.
@@ -59,7 +58,7 @@ in
     # We exclude a number of modules included in the default list. A non-insignificant amount do
     # not apply to embedded hardware like this, so simply skip the defaults.
     boot.initrd.includeDefaultModules = false;
-    boot.initrd.kernelModules = [ "mii" ];
+    boot.initrd.kernelModules = ["mii"];
 
     hardware.deviceTree.filter = "mt7986a-bananapi-bpi-r3.dtb";
     hardware.deviceTree.overlays = [
