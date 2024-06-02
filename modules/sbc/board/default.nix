@@ -1,12 +1,11 @@
-{ config
-, lib
-, ...
-}:
-with lib;
-let
-  cfg = config.sbc.board;
-in
 {
+  config,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.sbc.board;
+in {
   imports = [
     ./i2c
     ./uart

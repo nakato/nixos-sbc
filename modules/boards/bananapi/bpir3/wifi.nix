@@ -1,10 +1,10 @@
-{ config
-, lib
-, ...}:
-let
-  cfg = config.sbc.board.bananapi.bpir3;
-in
 {
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.sbc.board.bananapi.bpir3;
+in {
   options.sbc.board.bananapi.bpir3 = with lib; {
     enableWiFiTrainingData = mkOption {
       type = types.bool;
@@ -22,34 +22,33 @@ in
     };
   };
 
-  config =
-    lib.mkMerge [
-      (lib.mkIf config.sbc.wireless.wifi.enable {
-        assertions = [
-          {
-            assertion = config.sbc.board.bananapi.bpir3.enableWiFiTrainingData -> config.sbc.wireless.wifi.acceptRegulatoryResponsibility;
-            message = ''
-              To enable WiFi you must explicitly set
-              'config.sbc.wireless.wifi.acceptRegulatoryResponsibility',
-              stating that you understand your resposibility in ensuring the
-              device operates within the requirements of your regulatory
-              domain.
+  config = lib.mkMerge [
+    (lib.mkIf config.sbc.wireless.wifi.enable {
+      assertions = [
+        {
+          assertion = config.sbc.board.bananapi.bpir3.enableWiFiTrainingData -> config.sbc.wireless.wifi.acceptRegulatoryResponsibility;
+          message = ''
+            To enable WiFi you must explicitly set
+            'config.sbc.wireless.wifi.acceptRegulatoryResponsibility',
+            stating that you understand your resposibility in ensuring the
+            device operates within the requirements of your regulatory
+            domain.
 
-              If you wish to disable wifi support, you may do so by setting
-              'config.sbc.board.bananapi.bpir3.enableWiFi' to false'';
-          }
-        ];
+            If you wish to disable wifi support, you may do so by setting
+            'config.sbc.board.bananapi.bpir3.enableWiFi' to false'';
+        }
+      ];
 
-        boot.initrd.kernelModules = [ "mt7915e" ];
+      boot.initrd.kernelModules = ["mt7915e"];
 
-        hardware.enableRedistributableFirmware = true;
+      hardware.enableRedistributableFirmware = true;
 
-        hardware.deviceTree.overlays = lib.mkIf config.sbc.board.bananapi.bpir3.enableWiFiTrainingData [
-          {
-            name = "BananaPi R3 WiFi Training Data";
-            dtsFile = ./mt7986a-bananapi-bpi-r3-wirless.dts;
-          }
-        ];
-      })
-    ];
+      hardware.deviceTree.overlays = lib.mkIf config.sbc.board.bananapi.bpir3.enableWiFiTrainingData [
+        {
+          name = "BananaPi R3 WiFi Training Data";
+          dtsFile = ./mt7986a-bananapi-bpi-r3-wirless.dts;
+        }
+      ];
+    })
+  ];
 }

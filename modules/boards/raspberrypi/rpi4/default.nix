@@ -1,17 +1,17 @@
-{ config
-, lib
-, pkgs
-, sbcPkgs
-, ...}:
-let
-  cfg = config.sbc.board.raspberrypi.rpi4;
-in
 {
+  config,
+  lib,
+  pkgs,
+  sbcPkgs,
+  ...
+}: let
+  cfg = config.sbc.board.raspberrypi.rpi4;
+in {
   imports = [
     ../sd-image-rpi.nix
   ];
 
-  options.sbc.board.raspberrypi.rpi4 = with lib; { };
+  options.sbc.board.raspberrypi.rpi4 = with lib; {};
 
   config = {
     sbc.enable = true;
@@ -84,7 +84,7 @@ in
           "usbhid"
           "usb_storage"
         ];
-        kernelModules = [ "vc4" ];
+        kernelModules = ["vc4"];
       };
       kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
       loader = {
@@ -94,13 +94,12 @@ in
     };
 
     hardware.enableRedistributableFirmware = true;
-    environment.systemPackages = [ pkgs.libraspberrypi ];
+    environment.systemPackages = [pkgs.libraspberrypi];
 
     hardware.deviceTree.filter = "bcm2711-rpi-*.dtb";
 
     # TODO: CPU Revision overlay, which would normally come from firmware
     # See list https://elinux.org/RPi_HardwareHistory
     hardware.deviceTree.overlays = [];
-
   };
 }

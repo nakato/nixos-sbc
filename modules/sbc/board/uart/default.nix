@@ -1,5 +1,9 @@
-{config, lib, ...}: with lib;
-let
+{
+  config,
+  lib,
+  ...
+}:
+with lib; let
   cfg = config.sbc.board.uart;
 
   uartDevice = import ./device.nix;
@@ -8,8 +12,7 @@ let
   consoleDevices = builtins.filter (device: device.console);
   consoleToParams = builtins.map (device: "console=${device.deviceName},${builtins.toString device.baud}");
   consoleParams = devices: consoleToParams (consoleDevices (toDeviceList devices));
-in
-{
+in {
   options = {
     sbc.board.uart.devices = mkOption {
       type = types.nullOr (types.attrsOf (types.submodule uartDevice));

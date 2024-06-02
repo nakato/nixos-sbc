@@ -1,7 +1,14 @@
-{config, lib, ...}:
-with lib;
-let
-  enableOption = {config, globalConfig, ...}: {
+{
+  config,
+  lib,
+  ...
+}:
+with lib; let
+  enableOption = {
+    config,
+    globalConfig,
+    ...
+  }: {
     options = {
       dtOverlay = mkOption {
         # this made to be the imported function instead of a path?
@@ -16,7 +23,11 @@ let
     };
   };
 
-  disableOption = {config, globalConfig, ...}: {
+  disableOption = {
+    config,
+    globalConfig,
+    ...
+  }: {
     options = {
       dtOverlay = mkOption {
         # this made to be the imported function instead of a path?
@@ -30,11 +41,10 @@ let
       };
     };
   };
-in
-{
+in {
   options = {
     status = mkOption {
-      type = types.enum [ "disabled" "okay" "always" ];
+      type = types.enum ["disabled" "okay" "always"];
       description = mdDoc "Status of hardware in DT";
     };
 
@@ -44,11 +54,11 @@ in
     };
 
     enableMethod = mkOption {
-      type = types.nullOr (types.submoduleWith { modules = [ enableOption ]; });
+      type = types.nullOr (types.submoduleWith {modules = [enableOption];});
     };
 
     disableMethod = mkOption {
-      type = types.nullOr (types.submoduleWith { modules = [ disableOption ]; });
+      type = types.nullOr (types.submoduleWith {modules = [disableOption];});
     };
   };
 

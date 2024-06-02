@@ -1,19 +1,19 @@
-{ config
-, lib
-, sbcLibPath
-, sbcPkgs
-, ...}:
-let
-  cfg = config.sbc.board.pine64.rock64;
-in
 {
+  config,
+  lib,
+  sbcLibPath,
+  sbcPkgs,
+  ...
+}: let
+  cfg = config.sbc.board.pine64.rock64;
+in {
   imports = [
     ./sd-image.nix
   ];
 
   options.sbc.board.pine64.rock64 = with lib; {
     hardwareRevision = mkOption {
-      type = types.enum [ "v2" "v3" ];
+      type = types.enum ["v2" "v3"];
       description = mdDoc ''
         Hardware revision of the Rock64 board in use.
 
@@ -45,7 +45,7 @@ in
 
       rtc.devices.rk808 = {
         status = "always";
-        disableMethod.blacklistedKernelModules = [ "rtc_rk808" ];
+        disableMethod.blacklistedKernelModules = ["rtc_rk808"];
         enable = lib.mkDefault false;
       };
     };

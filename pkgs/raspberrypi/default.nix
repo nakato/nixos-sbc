@@ -1,24 +1,25 @@
-{ buildUBoot
-, dtc
-, fetchurl
-, fetchpatch
-, stdenvNoCC
-, mtools
-, dosfstools
-, raspberrypi-armstubs
-, raspberrypifw
-, runCommand
-, ubootRaspberryPi4_64bit
-, writeText
-, ...}:
-let
+{
+  buildUBoot,
+  dtc,
+  fetchurl,
+  fetchpatch,
+  stdenvNoCC,
+  mtools,
+  dosfstools,
+  raspberrypi-armstubs,
+  raspberrypifw,
+  runCommand,
+  ubootRaspberryPi4_64bit,
+  writeText,
+  ...
+}: let
   uBootArgs = {
     version = "2024.01";
     src = fetchurl {
       url = "ftp://ftp.denx.de/pub/u-boot/u-boot-2024.01.tar.bz2";
       hash = "sha256-uZYR8e0je/NUG9yENLaMlqbgWWcGH5kkQ8swqr6+9bM=";
     };
-    filesToInstall = [ "u-boot.bin" "arch/arm/dts/bcm2711-rpi-4-b.dtb" ];
+    filesToInstall = ["u-boot.bin" "arch/arm/dts/bcm2711-rpi-4-b.dtb"];
     defconfig = "rpi_4_defconfig";
     extraConfig = ''
       CONFIG_AUTOBOOT=y
@@ -56,18 +57,20 @@ let
 
     # Recreate the RPi patch in the new text env.
     # But don't use a patch, because it breaks needlessly between versions.
-    postPatch = oldAttrs.postPatch + ''
-      sed -i \
-        -e 's|scriptaddr=0x02400000|scriptaddr=0x04500000|' \
-        -e 's|pxefile_addr_r=0x02500000|pxefile_addr_r=0x04600000|' \
-        -e 's|fdt_addr_r=0x02600000|fdt_addr_r=0x04700000|' \
-        -e 's|ramdisk_addr_r=0x02700000|ramdisk_addr_r=0x04800000|' \
-        board/raspberrypi/rpi/rpi.env
+    postPatch =
+      oldAttrs.postPatch
+      + ''
+        sed -i \
+          -e 's|scriptaddr=0x02400000|scriptaddr=0x04500000|' \
+          -e 's|pxefile_addr_r=0x02500000|pxefile_addr_r=0x04600000|' \
+          -e 's|fdt_addr_r=0x02600000|fdt_addr_r=0x04700000|' \
+          -e 's|ramdisk_addr_r=0x02700000|ramdisk_addr_r=0x04800000|' \
+          board/raspberrypi/rpi/rpi.env
 
-      cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
-    '';
+        cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
+      '';
 
-    makeFlags = [ "DTC=${dtc}/bin/dtc" ];
+    makeFlags = ["DTC=${dtc}/bin/dtc"];
   }));
 
   ubootRaspberryPi4 = patchUBootDerivation (buildUBoot uBootArgs);
@@ -83,8 +86,7 @@ let
     enable_uart=1
     avoid_warnings=1
   '';
-in
-{
+in {
   inherit ubootRaspberryPi4;
 
   # Treat the entire RPi firmware partition as though it's an immutable blob
@@ -94,7 +96,7 @@ in
   raspberryPiFirmware = stdenvNoCC.mkDerivation {
     name = "raspberryPiFirmware.img";
 
-    nativeBuildInputs = [ dosfstools mtools ];
+    nativeBuildInputs = [dosfstools mtools];
 
     buildPhase = ''
       size=$((32 * 1024 * 1024))

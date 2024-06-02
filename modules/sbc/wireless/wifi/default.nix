@@ -1,10 +1,10 @@
-{ config
-, lib
-, ...}:
-let
-  cfg = config.sbc.wireless.wifi;
-in
 {
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.sbc.wireless.wifi;
+in {
   options.sbc.wireless.wifi = with lib; {
     enable = mkOption {
       type = types.bool;
@@ -27,7 +27,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    boot.initrd.kernelModules = [ "rfkill" "cfg80211" ];
+    boot.initrd.kernelModules = ["rfkill" "cfg80211"];
 
     hardware.wirelessRegulatoryDatabase = lib.mkForce true;
   };
