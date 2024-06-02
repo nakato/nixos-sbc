@@ -8,7 +8,7 @@
   fetchFromGitHub,
   lib,
   linuxKernel,
-  linux_6_7,
+  linux_6_9,
   ncurses,
   pkg-config,
   ubootTools,
@@ -106,7 +106,7 @@
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools];
     });
 
-  linuxPackages_6_7_bananaPiR3 = linuxKernel.packagesFor (linux_6_7.override {
+  linuxPackages_6_9_bananaPiR3 = linuxKernel.packagesFor (linux_6_9.override {
     kernelPatches = [
       {
         # Cold boot PCIe/NVMe have stability issues.
@@ -128,7 +128,8 @@
 
     structuredExtraConfig = with lib.kernel; {
       # Disable extremely unlikely features to reduce build storage requirements and time.
-      DRM = no;
+      FB = lib.mkForce no;
+      DRM = lib.mkForce no;
       SOUND = no;
       INFINIBAND = lib.mkForce no;
 
@@ -175,5 +176,5 @@
       REGULATOR_MT6380 = yes;
     };
   });
-  linuxPackages_latest_bananaPiR3 = linuxPackages_6_7_bananaPiR3;
+  linuxPackages_latest_bananaPiR3 = linuxPackages_6_9_bananaPiR3;
 }
