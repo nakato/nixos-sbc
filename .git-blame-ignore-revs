@@ -1,0 +1,8 @@
+# This configures commits to ignore when running blame.
+#
+# Configure this locally with
+# git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+
+# Mass remormat with alejandra
+f35952adc19e4242d879e70ea1f71d7c93528a01
