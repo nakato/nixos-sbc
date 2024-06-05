@@ -53,7 +53,7 @@ in {
     # Custom kernel is required as a lot of MTK components misbehave when built as modules.
     # They fail to load properly, leaving the system without working ethernet, they'll oops on
     # remove. MTK-DSA parts and PCIe were observed to do this.
-    boot.kernelPackages = sbcPkgs.linuxPacakges_latest_bananaPiR3;
+    boot.kernelPackages = sbcPkgs.linuxPackages_latest_bananaPiR3;
 
     # We exclude a number of modules included in the default list. A non-insignificant amount do
     # not apply to embedded hardware like this, so simply skip the defaults.

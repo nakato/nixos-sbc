@@ -106,7 +106,7 @@
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools];
     });
 
-  linuxPacakges_6_7_bananaPiR3 = linuxKernel.packagesFor (linux_6_7.override {
+  linuxPackages_6_7_bananaPiR3 = linuxKernel.packagesFor (linux_6_7.override {
     kernelPatches = [
       {
         # Cold boot PCIe/NVMe have stability issues.
@@ -175,5 +175,5 @@
       REGULATOR_MT6380 = yes;
     };
   });
-  linuxPacakges_latest_bananaPiR3 = linuxPacakges_6_7_bananaPiR3;
+  linuxPackages_latest_bananaPiR3 = linuxPackages_6_7_bananaPiR3;
 }
