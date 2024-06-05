@@ -92,5 +92,5 @@ with lib; {
           fi
         '';
       }
-  ) {uboot = sbcPkgs.armTrustedFirmwareMT7986;};
+  ) {uboot = sbcPkgs.ubootBananaPiR3;};
 }

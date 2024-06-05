@@ -1,4 +1,5 @@
 {
+  armTrustedFirmwareTools,
   buildArmTrustedFirmware,
   buildLinux,
   buildUBoot,
@@ -71,7 +72,12 @@
         CONFIG_FS_BTRFS=y
         CONFIG_CMD_BTRFS=y
       '';
-      filesToInstall = ["u-boot.bin"];
+      postBuild = ''
+        ${armTrustedFirmwareTools}/bin/fiptool create --soc-fw ${armTrustedFirmwareMT7986}/bl31.bin --nt-fw u-boot.bin fip.bin
+        cp ${armTrustedFirmwareMT7986}/bl2.img bl2.img
+      '';
+      # FIXME: Should bl2 bundle here?
+      filesToInstall = ["bl2.img" "fip.bin"];
       src = fetchurl {
         url = "ftp://ftp.denx.de/pub/u-boot/u-boot-2024.01.tar.bz2";
         hash = "sha256-uZYR8e0je/NUG9yENLaMlqbgWWcGH5kkQ8swqr6+9bM=";
@@ -81,18 +87,14 @@
     .overrideAttrs (oldAttrs: {
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [pkg-config ncurses];
       patches = extraPatches;
-      makeFlags = ["DTC=${dtc}/bin/dtc"];
     });
 
-  # TODO: Remove fip from extraMakeFlags, and do not pass uboot into this build.
-  # Build and package ./tools/fiptool/fiptool or work out how to use the fiptool.py in uboot binman.
-  # Build uboot, build this, commbine the two with fiptool create --soc-fw bl32.bin --nt-fw u-boot.bin u-boot.fip
   armTrustedFirmwareMT7986 =
     (buildArmTrustedFirmware rec {
-      extraMakeFlags = ["USE_MKIMAGE=1" "DRAM_USE_DDR4=1" "BOOT_DEVICE=sdmmc" "BL33=${ubootBananaPiR3}/u-boot.bin" "all" "fip"];
+      extraMakeFlags = ["USE_MKIMAGE=1" "DRAM_USE_DDR4=1" "BOOT_DEVICE=sdmmc" "bl2" "bl31"];
       platform = "mt7986";
       extraMeta.platforms = ["aarch64-linux"];
-      filesToInstall = ["build/${platform}/release/bl2.img" "build/${platform}/release/fip.bin"];
+      filesToInstall = ["build/${platform}/release/bl2.img" "build/${platform}/release/bl31.bin"];
     })
     .overrideAttrs (oldAttrs: {
       src = fetchFromGitHub {
