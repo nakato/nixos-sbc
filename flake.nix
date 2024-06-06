@@ -8,8 +8,9 @@
     nixpkgs,
     ...
   }: let
+    forSystems = systems: f: nixpkgs.lib.genAttrs systems (system: f system);
     systems = ["aarch64-linux" "riscv64-linux"];
-    forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
+    forAllSystems = forSystems systems;
 
     bootstrapSystem = {
       modules,
@@ -32,7 +33,7 @@
         }
       );
   in {
-    formatter = forAllSystems (
+    formatter = forSystems (builtins.attrNames nixpkgs.legacyPackages) (
       system:
         nixpkgs.legacyPackages.${system}.alejandra
     );
