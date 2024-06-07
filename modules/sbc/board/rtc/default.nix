@@ -39,6 +39,6 @@ in {
   in {
     hardware.deviceTree.overlays = enableDTO ++ disableDTO;
     boot.initrd.kernelModules = lib.flatten (builtins.map (d: d.enableMethod.moduleLoad) enableModuleTargets);
-    boot.blacklistedKernelModules = lib.flatten (builtins.map (d: d.disableMethod.blacklistedKernelModule) enableModuleTargets);
+    boot.blacklistedKernelModules = lib.flatten (builtins.map (d: d.disableMethod.blacklistedKernelModules) disableModuleTargets);
   };
 }
