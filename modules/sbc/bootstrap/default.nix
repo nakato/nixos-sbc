@@ -114,12 +114,17 @@ in {
           waitDevice "$ramifyDevice"
           mount -t btrfs -o compress=zstd $ramifyDevice $targetRoot
           if [ -f $targetRoot/NIXOS_RAMIFY -a ! -d $targetRoot/@ ]; then
-            ${pkgs.btrfs-progs}/bin/btrfs subvolume create $targetRoot/@nix
+            ${pkgs.btrfs-progs}/bin/btrfs subvolume snapshot $targetRoot $targetRoot/@nix
             ${pkgs.btrfs-progs}/bin/btrfs subvolume create $targetRoot/@boot
             ${pkgs.btrfs-progs}/bin/btrfs subvolume create $targetRoot/@
 
-            cp -a --reflink $targetRoot/nix/* $targetRoot/@nix/
+            # Remove /nix from top-level subvolume before anything else as /nix
+            # holds a lot of metadata in btrfs, especially if nixpkgs is included.
             rm -rf $targetRoot/nix
+
+            find $targetRoot/@nix -mindepth 1 -maxdepth 1 -not -path "$targetRoot/@nix/nix" -exec rm -rf {} \;
+            mv $targetRoot/@nix/nix/* $targetRoot/@nix/
+            rmdir $targetRoot/@nix/nix
 
             cp -a --reflink $targetRoot/boot/* $targetRoot/@boot/
             rm -rf $targetRoot/boot
