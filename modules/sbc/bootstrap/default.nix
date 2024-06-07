@@ -153,7 +153,7 @@ in {
           # Remove BTRFS SubVol from rootPart if it exists
           rootPart=''${rootPart//\[*/}
           rootDevice=$(lsblk -npo PKNAME $rootPart)
-          partNum=$(lsblk -npo MAJ:MIN $rootPart | ${pkgs.gawk}/bin/awk -F: '{print $2}')
+          partNum=$(lsblk -npo PARTN $rootPart)
 
           # Resize the root partition and the filesystem to fit the disk
           echo ",+," | sfdisk -N$partNum --no-reread $rootDevice
