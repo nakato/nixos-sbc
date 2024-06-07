@@ -68,6 +68,11 @@
           self.nixosModules.boards.raspberrypi.rpi4
         ];
       };
+      xunlong-opi5b = bootstrapSystem {
+        modules = [
+          self.nixosModules.boards.xunlong.opi5b
+        ];
+      };
     };
   };
 }
