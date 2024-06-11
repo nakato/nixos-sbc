@@ -33,20 +33,6 @@
       CONFIG_FS_BTRFS=y
       CONFIG_CMD_BTRFS=y
     '';
-    src = fetchurl {
-      url = "ftp://ftp.denx.de/pub/u-boot/u-boot-2024.01.tar.bz2";
-      hash = "sha256-uZYR8e0je/NUG9yENLaMlqbgWWcGH5kkQ8swqr6+9bM=";
-    };
-    version = "2024.01";
-    # No RPi patches
-    patches = [
-      (fetchpatch {
-        name = "u-boot-fs-btrfs-fix-reading-when-length-specified.patch";
-        url = "https://patchwork.ozlabs.org/project/uboot/patch/20231111151904.149009-1-CFSworks@gmail.com/raw/";
-        hash = "sha256-nn7hPvjxNUji9nCAJNGLV4bvL5j0LrkL8FiyYM6lFsA=";
-      })
-    ];
-    makeFlags = ["DTC=${dtc}/bin/dtc"];
   };
 in {
   ubootRock64 = ubootRock64.overrideAttrs overrideUbootAttrs;
