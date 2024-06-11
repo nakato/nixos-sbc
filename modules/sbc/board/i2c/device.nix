@@ -3,59 +3,13 @@
   globalConfig,
   config,
   lib,
+  pkgs,
   sbcLibPath,
   ...
 }:
 with lib; let
-  enableOption = {
-    config,
-    globalConfig,
-    ...
-  }: {
-    options = {
-      dtOverlay = mkOption {
-        type = types.submoduleWith {
-          modules = [(sbcLibPath + "/device-tree/simple-overlay.nix")];
-          specialArgs = {
-            inherit globalConfig;
-            target = name;
-            status = "okay";
-          };
-        };
-        default = {};
-      };
-
-      moduleLoad = mkOption {
-        type = types.nullOr (types.listOf (types.str));
-        default = null;
-      };
-    };
-  };
-
-  disableOption = {
-    config,
-    globalConfig,
-    ...
-  }: {
-    options = {
-      dtOverlay = mkOption {
-        type = types.submoduleWith {
-          modules = [(sbcLibPath + "/device-tree/simple-overlay.nix")];
-          specialArgs = {
-            inherit globalConfig;
-            target = name;
-            status = "disabled";
-          };
-        };
-        default = {};
-      };
-
-      blacklistedKernelModules = mkOption {
-        type = types.nullOr (types.listOf (types.str));
-        default = null;
-      };
-    };
-  };
+  inherit (pkgs.callPackage (sbcLibPath + "/options/device/dtoverlay.nix") {inherit sbcLibPath;}) dtOverlayOptions;
+  inherit (pkgs.callPackage (sbcLibPath + "/options/device/modules.nix") {}) moduleLoadOptions moduleBlacklistOptions;
 in {
   options = {
     dtTarget = mkOption {
@@ -74,16 +28,24 @@ in {
 
     enableMethod = mkOption {
       type = types.submoduleWith {
-        modules = [enableOption];
-        specialArgs = {globalConfig = globalConfig;};
+        modules = [dtOverlayOptions moduleLoadOptions];
+        specialArgs = {
+          inherit name;
+          globalConfig = globalConfig;
+          dtStatus = "okay";
+        };
       };
       default = {};
     };
 
     disableMethod = mkOption {
       type = types.submoduleWith {
-        modules = [disableOption];
-        specialArgs = {globalConfig = globalConfig;};
+        modules = [dtOverlayOptions moduleBlacklistOptions];
+        specialArgs = {
+          inherit name;
+          globalConfig = globalConfig;
+          dtStatus = "disabled";
+        };
       };
       default = {};
     };

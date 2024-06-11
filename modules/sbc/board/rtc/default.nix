@@ -25,7 +25,7 @@ in {
       type = types.attrsOf (types.submoduleWith {
         modules = [rtcDevice];
         specialArgs = {
-          inherit sbcLibPath;
+          inherit sbcLibPath pkgs;
           globalConfig = config;
         };
       });

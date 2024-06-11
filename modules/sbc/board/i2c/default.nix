@@ -25,7 +25,7 @@ in {
       type = types.attrsOf (types.submoduleWith {
         modules = [i2cDevice];
         specialArgs = {
-          inherit sbcLibPath;
+          inherit sbcLibPath pkgs;
           globalConfig = config;
         };
       });
