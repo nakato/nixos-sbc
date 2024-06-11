@@ -8,7 +8,7 @@
 with lib; let
   cfg = config.sbc.board.i2c;
 
-  i2cDevice = ./device.nix;
+  inherit (pkgs.callPackage (sbcLibPath + "/options/device") {inherit sbcLibPath;}) baseDevice dtOverlayMethods moduleMethods;
 
   findTargetsToEnable = devices: lib.filterAttrs (t: d: d.enable && d.status == "disabled") devices;
   findTargetsToDisable = devices: lib.filterAttrs (t: d: (!d.enable) && d.status != "disabled") devices;
@@ -23,7 +23,7 @@ in {
   options = {
     sbc.board.i2c.devices = mkOption {
       type = types.attrsOf (types.submoduleWith {
-        modules = [i2cDevice];
+        modules = [baseDevice dtOverlayMethods moduleMethods];
         specialArgs = {
           inherit sbcLibPath pkgs;
           globalConfig = config;

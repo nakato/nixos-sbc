@@ -1,25 +1,57 @@
-{sbcLibPath}: {
+{
+  lib,
+  sbcLibPath,
+  ...
+}:
+with lib; rec {
   dtOverlayOptions = {
-    config,
     dtStatus,
     globalConfig,
-    lib,
-    name,
+    target,
     ...
-  }:
-    with lib; {
-      options = {
-        dtOverlay = mkOption {
-          type = types.submoduleWith {
-            modules = [(sbcLibPath + "/device-tree/simple-overlay.nix")];
-            specialArgs = {
-              inherit globalConfig;
-              target = name;
-              status = dtStatus;
-            };
+  }: {
+    options = {
+      dtOverlay = mkOption {
+        type = types.submoduleWith {
+          modules = [(sbcLibPath + "/device-tree/simple-overlay.nix")];
+          specialArgs = {
+            inherit globalConfig target;
+            status = dtStatus;
           };
-          default = {};
         };
+        default = {};
       };
     };
+  };
+
+  dtOverlayMethods = {
+    globalConfig,
+    name,
+    ...
+  }: {
+    options = {
+      enableMethod = mkOption {
+        type = types.submoduleWith {
+          modules = [dtOverlayOptions];
+          specialArgs = {
+            inherit globalConfig;
+            target = name;
+            dtStatus = "okay";
+          };
+        };
+        default = {};
+      };
+      disableMethod = mkOption {
+        type = types.submoduleWith {
+          modules = [dtOverlayOptions];
+          specialArgs = {
+            inherit globalConfig;
+            target = name;
+            dtStatus = "disabled";
+          };
+        };
+        default = {};
+      };
+    };
+  };
 }
