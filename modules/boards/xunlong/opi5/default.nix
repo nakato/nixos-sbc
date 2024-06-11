@@ -50,22 +50,36 @@ in {
 
       # i2c0: CPU power management, no user function
       i2c.devices.i2c1 = {
-        # i2c1m4 Pin 16/18
-        # i2c1m2 Pin 12/15
         # Note: M2/M4 are mutually exclusive, it changes what pins i2c1 is on.
         status = "disabled";
-        # FIXME: Enable methods
+        enableMethod.dtOverlay = {
+          enable = true;
+          pinctrl-names = "default";
+          # Pins 16, 18
+          pinctrl-0 = lib.mkDefault ["i2c1m4_xfer"];
+          # FIXME: Could there be a more user-friendly method of selecting the pins
+          # for the interface than making the user know they need to set pinctrl-0 to
+          # i2c1m2_xfer to get i2c1 onto pins 12, 15?
+        };
       };
       # i2c2: NPU power management, no user function
       i2c.devices.i2c3 = {
-        # Pin 21/19
         status = "disabled";
-        # FIXME: Enable Methods
+        enableMethod.dtOverlay = {
+          enable = true;
+          pinctrl-names = "default";
+          # Pins 19, 21
+          pinctrl-0 = lib.mkDefault ["i2c3m0_xfer"];
+        };
       };
       i2c.devices.i2c5 = {
-        # Pin 3/5
         status = "disabled";
-        # FIXME: Enable Methods
+        enableMethod.dtOverlay = {
+          enable = true;
+          pinctrl-names = "default";
+          # Pins 3, 5
+          pinctrl-0 = lib.mkDefault ["i2c5m3_xfer"];
+        };
       };
       # i2c6: HYM8563 RTC, no user function
 
