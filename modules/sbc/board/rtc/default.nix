@@ -1,41 +1,48 @@
 {
   config,
   lib,
+  pkgs,
+  sbcLibPath,
   ...
 }:
 with lib; let
   cfg = config.sbc.board.rtc;
 
-  rtcDevice = import ./device.nix;
+  rtcDevice = ./device.nix;
 
   findTargetsToEnable = devices: lib.filterAttrs (t: d: d.enable && d.status == "disabled") devices;
   findTargetsToDisable = devices: lib.filterAttrs (t: d: (!d.enable) && d.status != "disabled") devices;
   targetAttrsetToList = devices: lib.attrValues (lib.mapAttrs (t: d: {target = t;} // d) devices);
 
-  removeNullEnableDTTargets = devices: lib.filter (d: d.enableMethod.dtOverlay != null) devices;
+  removeDisabledEnableDTTargets = devices: lib.filter (d: d.enableMethod.dtOverlay.enable) devices;
   removeNullEnableModuleTargets = devices: lib.filter (d: d.enableMethod.moduleLoad != null) devices;
 
-  removeNullDisableDTTargets = devices: lib.filter (d: d.disableMethod.dtOverlay != null) devices;
+  removeDisabledDisableDTTargets = devices: lib.filter (d: d.disableMethod.dtOverlay.enable) devices;
   removeNullDisableModuleTargets = devices: lib.filter (d: d.disableMethod.blacklistedKernelModules != null) devices;
 in {
   options = {
     sbc.board.rtc.devices = mkOption {
-      type = types.attrsOf (types.submodule rtcDevice);
-      default = {};
+      type = types.attrsOf (types.submoduleWith {
+        modules = [rtcDevice];
+        specialArgs = {
+          inherit sbcLibPath;
+          globalConfig = config;
+        };
+      });
     };
   };
 
   config = let
     enableTargets = targetAttrsetToList (findTargetsToEnable cfg.devices);
-    enableDTTargets = removeNullEnableDTTargets enableTargets;
+    enableDTTargets = removeDisabledEnableDTTargets enableTargets;
     enableModuleTargets = removeNullEnableModuleTargets enableTargets;
 
     disableTargets = targetAttrsetToList (findTargetsToDisable cfg.devices);
-    disableDTTargets = removeNullDisableDTTargets disableTargets;
+    disableDTTargets = removeDisabledDisableDTTargets disableTargets;
     disableModuleTargets = removeNullDisableModuleTargets disableTargets;
 
-    enableDTO = builtins.map (d: (import d.enableMethod.dtOverlay) "rtc-${d.target}" "&${d.target}" config.sbc.board.dtRoot) enableDTTargets;
-    disableDTO = builtins.map (d: (import d.disableMethod.dtOverlay) "rtc-${d.target}" "&${d.target}" config.sbc.board.dtRoot) disableDTTargets;
+    enableDTO = builtins.map (d: d.enableMethod.dtOverlay.dtOverlay) enableDTTargets;
+    disableDTO = builtins.map (d: d.disableMethod.dtOverlay.dtOverlay) disableDTTargets;
   in {
     hardware.deviceTree.overlays = enableDTO ++ disableDTO;
     boot.initrd.kernelModules = lib.flatten (builtins.map (d: d.enableMethod.moduleLoad) enableModuleTargets);

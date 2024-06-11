@@ -33,7 +33,7 @@ in {
 
       i2c.devices.i2c0 = {
         status = "disabled";
-        enableMethod.dtOverlay = sbcLibPath + "device-tree/simple-enable.nix";
+        enableMethod.dtOverlay.enable = true;
       };
 
       uart.devices.uart2 = {

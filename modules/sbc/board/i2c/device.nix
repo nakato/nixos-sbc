@@ -1,6 +1,9 @@
 {
+  name,
+  globalConfig,
   config,
   lib,
+  sbcLibPath,
   ...
 }:
 with lib; let
@@ -11,9 +14,15 @@ with lib; let
   }: {
     options = {
       dtOverlay = mkOption {
-        # this made to be the imported function instead of a path?
-        type = types.nullOr types.path;
-        default = null;
+        type = types.submoduleWith {
+          modules = [(sbcLibPath + "/device-tree/simple-overlay.nix")];
+          specialArgs = {
+            inherit globalConfig;
+            target = name;
+            status = "okay";
+          };
+        };
+        default = {};
       };
 
       moduleLoad = mkOption {
@@ -30,9 +39,15 @@ with lib; let
   }: {
     options = {
       dtOverlay = mkOption {
-        # this made to be the imported function instead of a path?
-        type = types.nullOr types.path;
-        default = null;
+        type = types.submoduleWith {
+          modules = [(sbcLibPath + "/device-tree/simple-overlay.nix")];
+          specialArgs = {
+            inherit globalConfig;
+            target = name;
+            status = "disabled";
+          };
+        };
+        default = {};
       };
 
       blacklistedKernelModules = mkOption {
@@ -43,6 +58,10 @@ with lib; let
   };
 in {
   options = {
+    dtTarget = mkOption {
+      type = types.str;
+      default = name;
+    };
     status = mkOption {
       type = types.enum ["disabled" "okay" "always"];
       description = mdDoc "Status of hardware in DT";
@@ -54,11 +73,19 @@ in {
     };
 
     enableMethod = mkOption {
-      type = types.nullOr (types.submoduleWith {modules = [enableOption];});
+      type = types.submoduleWith {
+        modules = [enableOption];
+        specialArgs = {globalConfig = globalConfig;};
+      };
+      default = {};
     };
 
     disableMethod = mkOption {
-      type = types.nullOr (types.submoduleWith {modules = [disableOption];});
+      type = types.submoduleWith {
+        modules = [disableOption];
+        specialArgs = {globalConfig = globalConfig;};
+      };
+      default = {};
     };
   };
 
