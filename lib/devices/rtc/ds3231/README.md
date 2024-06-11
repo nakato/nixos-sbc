@@ -17,13 +17,19 @@ You need to know the name of the i2c bus as described in the devices
 device-tree.  You can consult your devices device tree or poke around
 `/sys/firmware/devicetree/base/aliases/`.
 
-The i2c bus must be enabled, `status = "okay"`, this is not yet enforced by
-this repository.  The board contributor should have defined user-exposed i2c
-interfaces at sbc.board.i2c.devices.\*.
+The i2c bus must be enabled, `status = "okay"`, this will currently be forced
+due to how the DT simple-overlay is structured, but is not intentional, expect
+it to change and enable your i2c bus if it is not already enabled.
+The board contributor should have defined user-exposed i2c interfaces at
+sbc.board.i2c.devices.\*.
 
 Finally, enable the dtOverlay with:
 ```nix
-{ config, sbcLibPath }: {
-  sbc.board.rtc.devices.<I2C_NAME> = (import (sbcLibPath + /devices/rtc/ds3231/create.nix)) config.sbc.board.i2c.devices.<I2C_NAME>;
+{{config, sbcLibPath, ...}: {
+  imports = [
+    (import (sbcLibPath + /devices/rtc/ds3231/create.nix) {
+      i2cConfig = config.sbc.board.i2c.devices.<I2C_NAME>;
+    })
+  ];
 }
 ```
