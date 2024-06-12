@@ -47,7 +47,12 @@ in {
         console = true;
       };
 
-      wifi.devices.wifi.status = "okay";
+      wifi.devices.wifi = {
+        status = "okay";
+        enableMethod.moduleLoad = ["mt7915e"];
+        disableMethod.dtOverlay.enable = true;
+        enable = lib.mkDefault config.sbc.wireless.wifi.enable;
+      };
     };
 
     # Custom kernel is required as a lot of MTK components misbehave when built as modules.

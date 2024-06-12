@@ -23,23 +23,37 @@ in {
   };
 
   config = lib.mkMerge [
-    (lib.mkIf config.sbc.wireless.wifi.enable {
+    (lib.mkIf config.sbc.board.wifi.devices.wifi.enable {
+      warnings = lib.mkIf (!cfg.enableWiFiTrainingData) [
+        ''
+          BananaPi R3 WiFi hardware is enabled, however training data has not been enabled.
+          The WiFi hardware will not function without training data being provided, this can be
+          enabled with "config.sbc.board.bananapi.bpir3.enableWiFiTrainingData = true;"
+
+          If another method of providing training data is working, document that and add an option
+          to silence this warning.
+        ''
+      ];
       assertions = [
         {
-          assertion = config.sbc.board.bananapi.bpir3.enableWiFiTrainingData -> config.sbc.wireless.wifi.acceptRegulatoryResponsibility;
+          assertion = cfg.enableWiFiTrainingData -> config.sbc.wireless.wifi.acceptRegulatoryResponsibility;
           message = ''
-            To enable WiFi you must explicitly set
-            'config.sbc.wireless.wifi.acceptRegulatoryResponsibility',
-            stating that you understand your resposibility in ensuring the
-            device operates within the requirements of your regulatory
-            domain.
+            WiFi hardware with WiFi traning data has been enabled but acceptance of
+            regulatory responsibility has not been set.
 
-            If you wish to disable wifi support, you may do so by setting
-            'config.sbc.board.bananapi.bpir3.enableWiFi' to false'';
+            To enable WiFi hardware with training data, you must explicitly set
+            `config.sbc.wireless.wifi.acceptRegulatoryResponsibility`, which means
+            you understand your responsibility in ensuring the device operates
+            within the requirements of your regulatory domain.
+
+            You may however choose to disable the WiFi training data with
+            `config.sbc.board.bananapi.bpir3.enableWiFiTrainingData = false`,
+            in which case the WiFi hardware will not function.  Or you may fully
+            disable the WiFi hardware with
+            `config.sbc.board.wifi.devices.wifi.enable = false`.
+          '';
         }
       ];
-
-      boot.initrd.kernelModules = ["mt7915e"];
 
       hardware.enableRedistributableFirmware = true;
 
