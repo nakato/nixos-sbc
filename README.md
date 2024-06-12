@@ -39,6 +39,7 @@ Work in progress:
 | BananaPi           | BPiR3           | ✓        |
 | Pine64             | Rock64          | ✓        |
 | RaspberryPi        | RPi4            | ✓        |
+| Xunlong            | OrangePi 5B     | ✓        |
 
 
 | Icon | Description  |
