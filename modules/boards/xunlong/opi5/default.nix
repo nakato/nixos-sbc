@@ -88,36 +88,50 @@ in {
         status = "disabled";
         deviceName = "ttyS0";
         console = false;
-        # FIXME: Enable Methods
+        enableMethod.dtOverlay = {
+          enable = true;
+          # Pins 8, 10
+          pinctrl-0 = lib.mkDefault ["uart0m2_xfer"];
+        };
       };
       uart.devices.uart1 = {
-        # Pins 3/5
         status = "disabled";
         deviceName = "ttyS1";
         console = false;
-        # FIXME: Enable Methods
+        enableMethod.dtOverlay = {
+          enable = true;
+          # Pins 3, 5
+          pinctrl-0 = lib.mkDefault ["uart1m1_xfer"];
+        };
       };
       uart.devices.uart2 = {
         status = "okay";
         baud = 1500000;
         deviceName = "ttyS2";
         console = true;
-        # FIXME: Disable Methods
+        disableMethod.dtOverlay.enable = true;
       };
       uart.devices.uart3 = {
-        # 19/21
         status = "disabled";
         deviceName = "ttyS3";
         console = false;
-        # FIXME: Enable Methods
+        enableMethod.dtOverlay = {
+          enable = true;
+          # Pins 19, 21
+          pinctrl-0 = lib.mkDefault ["uart3m0_xfer"];
+        };
       };
       uart.devices.uart4 = {
-        # 16/18
         status = "disabled";
         deviceName = "ttyS4";
         console = false;
-        # FIXME: Enable Methods
+        enableMethod.dtOverlay = {
+          enable = true;
+          # Pins 16, 18
+          pinctrl-0 = lib.mkDefault ["uart4m0_xfer"];
+        };
       };
+      # UART 9 is BT on 5b
 
       rtc.devices.hym8563 = {
         status = "always";
