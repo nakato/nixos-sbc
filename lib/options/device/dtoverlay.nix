@@ -54,4 +54,16 @@ with lib; rec {
       };
     };
   };
+
+  getDTOverlay = dtConfig: let
+    enable = dtConfig.enable;
+    enableDts = lib.optionals (enable && dtConfig.enableMethod.dtOverlay.enable) [dtConfig.enableMethod.dtOverlay.dtOverlay];
+    disableDts = lib.optionals (!enable && dtConfig.disableMethod.dtOverlay.enable) [dtConfig.disableMethod.dtOverlay.dtOverlay];
+  in
+    enableDts ++ disableDts;
+
+  getDTOverlays = devices: let
+    deviceList = builtins.attrValues devices;
+  in
+    builtins.concatMap (value: (getDTOverlay value)) deviceList;
 }

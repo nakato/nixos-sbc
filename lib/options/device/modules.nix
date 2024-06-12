@@ -3,8 +3,8 @@ with lib; rec {
   moduleLoadOptions = {...}: {
     options = {
       moduleLoad = mkOption {
-        type = types.nullOr (types.listOf (types.str));
-        default = null;
+        type = types.listOf (types.str);
+        default = [];
       };
     };
   };
@@ -12,8 +12,8 @@ with lib; rec {
   moduleBlacklistOptions = {...}: {
     options = {
       blacklistedKernelModules = mkOption {
-        type = types.nullOr (types.listOf (types.str));
-        default = null;
+        type = types.listOf (types.str);
+        default = [];
       };
     };
   };
@@ -33,4 +33,24 @@ with lib; rec {
       };
     };
   };
+
+  getEnableKernelModuleForDevice = device: let
+    enable = device.enable;
+  in
+    lib.optionals enable device.enableMethod.moduleLoad;
+
+  getEnableKernelModules = devices: let
+    deviceList = builtins.attrValues devices;
+  in
+    builtins.concatMap (value: (getEnableKernelModuleForDevice value)) deviceList;
+
+  getDisableKernelModulesForDevice = device: let
+    disable = !device.enable;
+  in
+    lib.optionals disable device.disableMethod.blacklistedKernelModules;
+
+  getDisableKernelModules = devices: let
+    deviceList = builtins.attrValues devices;
+  in
+    builtins.concatMap (value: (getDisableKernelModulesForDevice value)) deviceList;
 }
