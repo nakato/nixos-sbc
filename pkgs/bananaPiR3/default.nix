@@ -73,7 +73,7 @@
         CONFIG_CMD_BTRFS=y
       '';
       postBuild = ''
-        ${armTrustedFirmwareTools}/bin/fiptool create --soc-fw ${armTrustedFirmwareMT7986}/bl31.bin --nt-fw u-boot.bin fip.bin
+        fiptool create --soc-fw ${armTrustedFirmwareMT7986}/bl31.bin --nt-fw u-boot.bin fip.bin
         cp ${armTrustedFirmwareMT7986}/bl2.img bl2.img
       '';
       # FIXME: Should bl2 bundle here?
@@ -85,7 +85,7 @@
       version = "2024.01";
     })
     .overrideAttrs (oldAttrs: {
-      nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [pkg-config ncurses];
+      nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [pkg-config ncurses armTrustedFirmwareTools];
       patches = extraPatches;
     });
 
