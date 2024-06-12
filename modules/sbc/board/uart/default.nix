@@ -1,12 +1,38 @@
 {
   config,
   lib,
+  pkgs,
+  sbcLibPath,
   ...
 }:
 with lib; let
   cfg = config.sbc.board.uart;
 
-  uartDevice = import ./device.nix;
+  inherit (pkgs.callPackage (sbcLibPath + "/options/device") {inherit sbcLibPath;}) baseDevice dtOverlayMethods moduleMethods getDTOverlays getEnableKernelModules getDisableKernelModules;
+
+  uartDevice = {
+    config,
+    lib,
+    ...
+  }:
+    with lib; {
+      options = {
+        deviceName = mkOption {
+          type = types.str;
+          description = mdDoc "Name of UART device in Linux";
+        };
+
+        baud = mkOption {
+          type = types.int;
+          description = mdDoc "Default baud-rate of the hardware, used by software";
+        };
+
+        console = mkOption {
+          type = types.bool;
+          description = mdDoc "If true, device will be configured as a console during boot";
+        };
+      };
+    };
 
   toDeviceList = builtins.attrValues;
   consoleDevices = builtins.filter (device: device.console);
@@ -15,7 +41,14 @@ with lib; let
 in {
   options = {
     sbc.board.uart.devices = mkOption {
-      type = types.nullOr (types.attrsOf (types.submodule uartDevice));
+      type = types.attrsOf (types.submoduleWith {
+        modules = [baseDevice dtOverlayMethods moduleMethods uartDevice];
+        specialArgs = {
+          inherit sbcLibPath pkgs;
+          globalConfig = config;
+        };
+      });
+      default = {};
     };
   };
 
@@ -28,6 +61,10 @@ in {
         '';
       }
     ];
+
+    hardware.deviceTree.overlays = getDTOverlays cfg.devices;
+    boot.initrd.kernelModules = getEnableKernelModules cfg.devices;
+    boot.blacklistedKernelModules = getDisableKernelModules cfg.devices;
 
     boot.kernelParams = consoleParams cfg.devices;
   };
