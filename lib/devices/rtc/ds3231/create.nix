@@ -1,4 +1,6 @@
-{i2cConfig}: {
+filter: {config, ...}: let
+  inherit (filter {inherit config;}) i2cConfig;
+in {
   # Remove 'status = ""' from the RTC overlay, and demote this to warning.
   assertions = [
     {

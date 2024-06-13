@@ -25,11 +25,10 @@ sbc.board.i2c.devices.\*.
 
 Finally, enable the dtOverlay with:
 ```nix
-{{config, sbcLibPath, ...}: {
-  imports = [
-    (import (sbcLibPath + /devices/rtc/ds3231/create.nix) {
-      i2cConfig = config.sbc.board.i2c.devices.<I2C_NAME>;
-    })
+host = nixosSystem {
+  modules = [
+    # Note: The deviceBuilder API should be considered unstable.
+    (nixos-sbc.deviceBuilder.rtc.ds3231 ({config}: {i2cConfig = config.sbc.board.i2c.devices.i2c0;}))
   ];
 }
 ```

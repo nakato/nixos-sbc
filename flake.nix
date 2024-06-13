@@ -46,6 +46,11 @@
     );
 
     nixosModules = import ./modules;
+    # deviceBuilder is an unstable API.  I'm throwing it in quickly
+    # to unblock my usage.
+    deviceBuilder = {
+      rtc.ds3231 = import ./lib/devices/rtc/ds3231/create.nix;
+    };
 
     nixosConfigurations = {
       bananapi-bpir3 = bootstrapSystem {
