@@ -64,6 +64,7 @@ in {
     # not apply to embedded hardware like this, so simply skip the defaults.
     boot.initrd.includeDefaultModules = false;
     boot.initrd.kernelModules = ["mii"];
+    boot.initrd.availableKernelModules = ["nvme"];
 
     hardware.deviceTree.filter = "mt7986a-bananapi-bpi-r3.dtb";
     hardware.deviceTree.overlays = [
