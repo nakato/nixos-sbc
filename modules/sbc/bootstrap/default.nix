@@ -108,7 +108,8 @@ in {
         # But that's not supported yet with the whole /nix-path-registration thing
         rootDevice = (builtins.head (builtins.filter (fs: fs.mountPoint == "/") config.system.build.fileSystems)).device;
       in
-        lib.mkIf (cfg.rootFilesystem == "btrfs-subvol") ''
+        # FIXME: Support impermanence on first-boot
+        lib.mkIf (cfg.rootFilesystem == "btrfs-subvol" && rootDevice != "none") ''
           mkdir -p $targetRoot
           ramifyDevice=${rootDevice}
           waitDevice "$ramifyDevice"
