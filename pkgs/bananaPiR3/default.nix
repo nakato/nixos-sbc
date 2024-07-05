@@ -19,11 +19,6 @@
     extraPatches = [
       ./mt7986-persistent-mac-from-cpu-uid.patch
       ./mt7986-persistent-wlan-mac-from-cpu-uid.patch
-      (fetchpatch {
-        name = "u-boot-fs-btrfs-fix-reading-when-length-specified.patch";
-        url = "https://patchwork.ozlabs.org/project/uboot/patch/20231111151904.149009-1-CFSworks@gmail.com/raw/";
-        hash = "sha256-nn7hPvjxNUji9nCAJNGLV4bvL5j0LrkL8FiyYM6lFsA=";
-      })
     ];
   in
     (buildUBoot {
@@ -78,11 +73,6 @@
       '';
       # FIXME: Should bl2 bundle here?
       filesToInstall = ["bl2.img" "fip.bin"];
-      src = fetchurl {
-        url = "ftp://ftp.denx.de/pub/u-boot/u-boot-2024.01.tar.bz2";
-        hash = "sha256-uZYR8e0je/NUG9yENLaMlqbgWWcGH5kkQ8swqr6+9bM=";
-      };
-      version = "2024.01";
     })
     .overrideAttrs (oldAttrs: {
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [pkg-config ncurses armTrustedFirmwareTools];
