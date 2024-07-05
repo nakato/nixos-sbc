@@ -1,4 +1,5 @@
 {
+  patchSBCUBoot,
   lib,
   dtc,
   fetchurl,
@@ -23,26 +24,9 @@
         sed -i 's/rk3588s-orangepi-5/rk3588s-orangepi-5b/' configs/orangepi-5b-rk3588s_defconfig
       '';
     extraConfig =
-      ''
-        CONFIG_AUTOBOOT=y
-        CONFIG_BOOTDELAY=1
-        CONFIG_USE_BOOTCOMMAND=y
-        # Use bootstd and bootflow over distroboot for extlinux support
-        CONFIG_BOOTSTD_DEFAULTS=y
-        CONFIG_BOOTSTD_FULL=y
-        CONFIG_CMD_BOOTFLOW_FULL=y
-        CONFIG_BOOTCOMMAND="bootflow scan -lb"
+      oldAttrs.extraConfig
+      + ''
         CONFIG_DEVICE_TREE_INCLUDES="nixos-mmcboot.dtsi"
-        # Disable saving env, it isn't tested and probably doesn't work.
-        CONFIG_ENV_IS_NOWHERE=y
-        CONFIG_LZ4=y
-        CONFIG_BZIP2=y
-        CONFIG_ZSTD=y
-        # Boot on root ext4 support
-        CONFIG_CMD_EXT4=y
-        # Boot on root btrfs support
-        CONFIG_FS_BTRFS=y
-        CONFIG_CMD_BTRFS=y
       ''
       + lib.optionalString bVariant ''
         CONFIG_MMC_SDHCI=y
@@ -51,8 +35,8 @@
       '';
   };
 in {
-  ubootOrangePi5 = ubootOrangePi5.overrideAttrs (overrideUbootAttrs false);
-  ubootOrangePi5b = (ubootOrangePi5.overrideAttrs (overrideUbootAttrs true)).override {defconfig = "orangepi-5b-rk3588s_defconfig";};
+  ubootOrangePi5 = (patchSBCUBoot ubootOrangePi5).overrideAttrs (overrideUbootAttrs false);
+  ubootOrangePi5b = (patchSBCUBoot ubootOrangePi5).overrideAttrs (overrideUbootAttrs true);
   orangePi5bDTBs = linuxPackages_6_9.kernel.overrideAttrs (oldAttrs: {
     pname = "linux-opi5b-dtbs";
     buildFlags = ["dtbs"];
