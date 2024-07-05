@@ -1,5 +1,5 @@
 {
-  buildUBoot,
+  buildSBCUBoot,
   dtc,
   fetchurl,
   fetchpatch,
@@ -13,57 +13,24 @@
   writeText,
   ...
 }: let
-  uBootArgs = {
+  ubootRaspberryPi4 = buildSBCUBoot {
     filesToInstall = ["u-boot.bin" "arch/arm/dts/bcm2711-rpi-4-b.dtb"];
     defconfig = "rpi_4_defconfig";
-    extraConfig = ''
-      CONFIG_AUTOBOOT=y
-      CONFIG_BOOTDELAY=1
-      CONFIG_USE_BOOTCOMMAND=y
-      # Use bootstd and bootflow over distroboot for extlinux support
-      CONFIG_BOOTSTD_DEFAULTS=y
-      CONFIG_BOOTSTD_FULL=y
-      CONFIG_CMD_BOOTFLOW_FULL=y
-      CONFIG_BOOTCOMMAND="bootflow scan -lb"
-      CONFIG_DEVICE_TREE_INCLUDES="nixos-mmcboot.dtsi"
-      # Disable saving env, it isn't tested and probably doesn't work.
-      CONFIG_ENV_IS_NOWHERE=y
-      CONFIG_LZ4=y
-      CONFIG_BZIP2=y
-      CONFIG_ZSTD=y
-      # Boot on root ext4 support
-      CONFIG_CMD_EXT4=y
-      # Boot on root btrfs support
-      CONFIG_FS_BTRFS=y
-      CONFIG_CMD_BTRFS=y
-    '';
     extraMeta.platforms = ["aarch64-linux"];
-  };
-
-  patchUBootDerivation = pkg: (pkg.overrideAttrs (oldAttrs: {
-    # No RPi patches
-    patches = [
-    ];
 
     # Recreate the RPi patch in the new text env.
     # But don't use a patch, because it breaks needlessly between versions.
-    postPatch =
-      oldAttrs.postPatch
-      + ''
-        sed -i \
-          -e 's|scriptaddr=0x02400000|scriptaddr=0x04500000|' \
-          -e 's|pxefile_addr_r=0x02500000|pxefile_addr_r=0x04600000|' \
-          -e 's|fdt_addr_r=0x02600000|fdt_addr_r=0x04700000|' \
-          -e 's|ramdisk_addr_r=0x02700000|ramdisk_addr_r=0x04800000|' \
-          board/raspberrypi/rpi/rpi.env
+    postPatch = ''
+      sed -i \
+        -e 's|scriptaddr=0x02400000|scriptaddr=0x04500000|' \
+        -e 's|pxefile_addr_r=0x02500000|pxefile_addr_r=0x04600000|' \
+        -e 's|fdt_addr_r=0x02600000|fdt_addr_r=0x04700000|' \
+        -e 's|ramdisk_addr_r=0x02700000|ramdisk_addr_r=0x04800000|' \
+        board/raspberrypi/rpi/rpi.env
 
-        cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
-      '';
-
-    makeFlags = ["DTC=${dtc}/bin/dtc"];
-  }));
-
-  ubootRaspberryPi4 = patchUBootDerivation (buildUBoot uBootArgs);
+      cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
+    '';
+  };
 
   rpiFirmwareConfigTxt = writeText "config.txt" ''
     [pi4]¬
