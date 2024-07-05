@@ -1,5 +1,6 @@
 {
   buildUBoot,
+  fetchpatch,
   lib,
   ...
 }: let
@@ -24,6 +25,13 @@
     CONFIG_FS_BTRFS=y
     CONFIG_CMD_BTRFS=y
   '';
+  sbcExtraPatches = [
+    (fetchpatch {
+      name = "[v2] fs: btrfs: fix out of bounds write";
+      url = "https://patchwork.ozlabs.org/project/uboot/patch/20240618214138.3212175-1-alexthreed@gmail.com/raw/";
+      hash = "sha256-eACraQRT+ejM6pIwr08T2vqqEN+AAvtk37e3Q4a+BKA=";
+    })
+  ];
 in {
   buildSBCUBoot = args:
     (buildUBoot (
@@ -34,7 +42,7 @@ in {
     ))
     .overrideAttrs (oldAttrs: {
       # No RPi patches
-      patches = lib.optionals (args ? extraPatches) args.extraPatches;
+      patches = (lib.optionals (args ? extraPatches) args.extraPatches) ++ sbcExtraPatches;
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ (lib.optionals (args ? extraNativeBuildInputs) args.extraNativeBuildInputs);
       postPatch = oldAttrs.postPatch + (lib.optionalString (args ? postPatch) args.postPatch);
     });
@@ -42,5 +50,6 @@ in {
   patchSBCUBoot = pkg:
     pkg.overrideAttrs (oldAttrs: {
       extraConfig = (lib.optionalString (oldAttrs ? extraConfig) oldAttrs.extraConfig) + sbcExtraConfig;
+      patches = oldAttrs.patches ++ sbcExtraPatches;
     });
 }
