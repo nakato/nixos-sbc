@@ -2,9 +2,7 @@
   config,
   lib,
   ...
-}: let
-  cfg = config.sbc.board.pine64.rock64;
-in {
+}: {
   imports = [
     ./sd-image.nix
   ];
