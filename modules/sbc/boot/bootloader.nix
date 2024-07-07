@@ -2,7 +2,6 @@
   config,
   lib,
   options,
-  pkgs,
   ...
 }: let
   cfg = config.sbc.boot.bootloader;

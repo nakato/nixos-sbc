@@ -1,15 +1,10 @@
 {
   buildSBCUBoot,
-  dtc,
-  fetchurl,
-  fetchpatch,
   stdenvNoCC,
   mtools,
   dosfstools,
   raspberrypi-armstubs,
   raspberrypifw,
-  runCommand,
-  ubootRaspberryPi4_64bit,
   writeText,
   ...
 }: let

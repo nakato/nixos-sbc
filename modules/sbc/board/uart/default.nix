@@ -10,11 +10,7 @@ with lib; let
 
   inherit (pkgs.callPackage (sbcLibPath + "/options/device") {inherit sbcLibPath;}) baseDevice dtOverlayMethods moduleMethods getDTOverlays getEnableKernelModules getDisableKernelModules;
 
-  uartDevice = {
-    config,
-    lib,
-    ...
-  }:
+  uartDevice = {lib, ...}:
     with lib; {
       options = {
         deviceName = mkOption {

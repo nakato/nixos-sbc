@@ -2,11 +2,8 @@
   config,
   lib,
   pkgs,
-  sbcPkgs,
   ...
-}: let
-  cfg = config.sbc.board.raspberrypi.rpi4;
-in {
+}: {
   imports = [
     ../sd-image-rpi.nix
   ];

@@ -1,11 +1,8 @@
 {
   armTrustedFirmwareTools,
   buildArmTrustedFirmware,
-  buildLinux,
   buildSBCUBoot,
   dtc,
-  fetchpatch,
-  fetchurl,
   fetchFromGitHub,
   lib,
   linuxKernel,
