@@ -8,37 +8,15 @@
     nixpkgs,
     ...
   }: let
-    forSystems = systems: f: nixpkgs.lib.genAttrs systems (system: f system);
-    systems = ["aarch64-linux" "riscv64-linux"];
-    forAllSystems = forSystems systems;
-
-    bootstrapSystem = {
-      modules,
-      system ? "aarch64-linux",
-      ...
-    } @ config:
-      nixpkgs.lib.nixosSystem (
-        config
-        // {
-          inherit system;
-          modules =
-            modules
-            ++ [
-              self.nixosModules.default
-              {
-                sbc.bootstrap.initialBootstrapImage = true;
-                sbc.version = "0.2";
-              }
-            ];
-        }
-      );
+    _lib = import ./lib {inherit nixpkgs self;};
+    inherit (_lib) bootstrapSystem forAllSystems forSupportedSystems;
   in {
-    formatter = forSystems (builtins.attrNames nixpkgs.legacyPackages) (
+    formatter = forAllSystems (
       system:
         nixpkgs.legacyPackages.${system}.alejandra
     );
 
-    packages = forAllSystems (
+    packages = forSupportedSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
       in
