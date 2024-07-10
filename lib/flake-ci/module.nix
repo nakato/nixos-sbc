@@ -19,6 +19,7 @@
     pkgs.writeShellScriptBin "nixos-sbc-ci-run" ''
       export PATH="${path}"
       export HOME="$RUNTIME_DIRECTORY"
+      export BRANCH="CI"
       CACHIX_REPO="nixos-sbc"
 
       set -euo pipefail
@@ -27,7 +28,7 @@
       git config --global user.name "SBC-CI"
 
       cd "$RUNTIME_DIRECTORY"
-      git clone "https://''${GITHUB_AUTH_KEY}@github.com/nakato/nixos-sbc.git"
+      git clone --branch "$BRANCH" "https://''${GITHUB_AUTH_KEY}@github.com/nakato/nixos-sbc.git"
       echo "Sucesfully cloned repo"
       cd nixos-sbc
       nix flake lock --update-input nixpkgs
