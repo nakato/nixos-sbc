@@ -1,4 +1,5 @@
 {
+  lib,
   nixpkgs,
   self,
 }: rec {
@@ -29,4 +30,25 @@
           ];
       }
     );
+
+  builders = rec {
+    flattenNested = name: pkgs: lib.concatMapAttrs (pName: drv: {${name + "__" + pName} = drv;}) pkgs;
+    filterSkipBuildCache = pkgs: lib.filterAttrs (n: v: (v.meta ? skipBuildCache -> !(v.meta.skipBuildCache))) pkgs;
+    filterKernelPackages = pkgs:
+      if (pkgs ? isZen)
+      then {inherit (pkgs) kernel;}
+      else pkgs;
+
+    flattenDerivations' = pkgs:
+      builtins.foldl' (acc: elem:
+        (
+          if (lib.isDerivation pkgs.${elem})
+          then {"${elem}" = pkgs."${elem}";}
+          else (flattenNested elem (flattenDerivations pkgs."${elem}"))
+        )
+        // acc) {} (builtins.attrNames pkgs);
+    flattenDerivations = pkgs: flattenDerivations' (filterKernelPackages pkgs);
+    filterBuildTargets = pkgs: filterSkipBuildCache (flattenDerivations pkgs);
+    buildTargets = builtins.mapAttrs (arch: pkgs: filterBuildTargets pkgs) self.packages;
+  };
 }

@@ -30,6 +30,7 @@
         CONFIG_MMC_SDHCI_SDMA=y
         CONFIG_MMC_SDHCI_ROCKCHIP=y
       '';
+    meta = oldAttrs.meta // {skipBuildCache = true;};
   };
 in {
   ubootOrangePi5 = (patchSBCUBoot ubootOrangePi5).overrideAttrs (overrideUbootAttrs false);

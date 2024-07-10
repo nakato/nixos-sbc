@@ -11,7 +11,9 @@
   pkg-config,
   ubootTools,
   ...
-}: rec {
+}: let
+  setSkipBuildCache = b: pkg: pkg.overrideAttrs (oa: {meta = oa.meta // {skipBuildCache = b;};});
+in rec {
   ubootBananaPiR3 = let
   in
     buildSBCUBoot {
@@ -70,7 +72,7 @@
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools];
     });
 
-  linuxPackages_6_9_bananaPiR3 = linuxKernel.packagesFor (linux_6_9.override {
+  linuxPackages_6_9_bananaPiR3 = linuxKernel.packagesFor (setSkipBuildCache true (linux_6_9.override {
     kernelPatches = [
       {
         # Cold boot PCIe/NVMe have stability issues.
@@ -139,8 +141,8 @@
       MEDIATEK_WATCHDOG = yes;
       REGULATOR_MT6380 = yes;
     };
-  });
-  linuxPackages_6_9_bananaPiR3_minimal = linuxKernel.packagesFor (linuxPackages_6_9_bananaPiR3.kernel.override {
+  }));
+  linuxPackages_6_9_bananaPiR3_minimal = linuxKernel.packagesFor (setSkipBuildCache false (linuxPackages_6_9_bananaPiR3.kernel.override {
     autoModules = false;
 
     structuredExtraConfig = with lib.kernel;
@@ -343,6 +345,6 @@
         SFP = module;
         MDIO_I2C = module;
       };
-  });
+  }));
   linuxPackages_latest_bananaPiR3 = linuxPackages_6_9_bananaPiR3;
 }

@@ -8,9 +8,14 @@
     nixpkgs,
     ...
   }: let
-    _lib = import ./lib {inherit nixpkgs self;};
+    _lib = import ./lib {
+      inherit nixpkgs self;
+      lib = nixpkgs.lib;
+    };
     inherit (_lib) bootstrapSystem forAllSystems forSupportedSystems;
   in {
+    inherit _lib;
+
     formatter = forAllSystems (
       system:
         nixpkgs.legacyPackages.${system}.alejandra
