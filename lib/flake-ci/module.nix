@@ -30,6 +30,10 @@
       cd "$RUNTIME_DIRECTORY"
       git clone --branch "$BRANCH" "https://''${GITHUB_AUTH_KEY}@github.com/nakato/nixos-sbc.git"
       echo "Sucesfully cloned repo"
+
+      # BEGIN LOGGING
+      set -x
+
       cd nixos-sbc
       nix flake lock --update-input nixpkgs
       git status --porcelain | grep " M flake.lock"
