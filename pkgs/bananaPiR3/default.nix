@@ -1,11 +1,8 @@
 {
   armTrustedFirmwareTools,
   buildArmTrustedFirmware,
-  buildLinux,
   buildSBCUBoot,
   dtc,
-  fetchpatch,
-  fetchurl,
   fetchFromGitHub,
   lib,
   linuxKernel,
@@ -15,8 +12,7 @@
   ubootTools,
   ...
 }: rec {
-  ubootBananaPiR3 = let
-  in
+  ubootBananaPiR3 =
     buildSBCUBoot {
       defconfig = "mt7986a_bpir3_sd_defconfig";
       extraMeta.platforms = ["aarch64-linux"];

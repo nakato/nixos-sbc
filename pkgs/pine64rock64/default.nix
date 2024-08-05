@@ -1,8 +1,5 @@
 {
   patchSBCUBoot,
-  dtc,
-  fetchurl,
-  fetchpatch,
   ubootRock64,
   ubootRock64v2,
   ...
