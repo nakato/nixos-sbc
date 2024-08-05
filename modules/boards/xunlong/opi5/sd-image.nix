@@ -1,10 +1,9 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
-with lib; {
+{
   system.build.sdImage = pkgs.callPackage (
     {
       stdenv,

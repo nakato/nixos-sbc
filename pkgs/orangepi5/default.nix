@@ -1,9 +1,6 @@
 {
   patchSBCUBoot,
   lib,
-  dtc,
-  fetchurl,
-  fetchpatch,
   ubootOrangePi5,
   linuxPackages_6_9,
   ...

@@ -1,8 +1,6 @@
 {
   config,
   lib,
-  sbcLibPath,
-  sbcPkgs,
   ...
 }: let
   cfg = config.sbc.board.pine64.rock64;
