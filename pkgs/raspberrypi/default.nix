@@ -33,7 +33,7 @@
   };
 
   rpiFirmwareConfigTxt = writeText "config.txt" ''
-    [pi4]¬
+    [pi4]
     kernel=u-boot-pi4.bin
     enable_gic=1
     armstub=armstub8-gic.bin
