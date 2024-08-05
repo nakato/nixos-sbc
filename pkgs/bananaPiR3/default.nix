@@ -31,8 +31,8 @@
         # makefile is causing issues.
         # Regression caused by a958988b62eb9ad33c0f41b4482cfbba4aa71564.
         #
-        # For now, work around issue by copying dtsi into tree and referencing¬
-        # it in extraConfig using the relative path.¬
+        # For now, work around issue by copying dtsi into tree and referencing
+        # it in extraConfig using the relative path.
         cp ${./mt7986-mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
       '';
       extraConfig = ''
