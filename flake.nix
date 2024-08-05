@@ -42,6 +42,11 @@
           self.nixosModules.boards.bananapi.bpir3
         ];
       };
+      bananapi-bpir4 = bootstrapSystem {
+        modules = [
+          self.nixosModules.boards.bananapi.bpir4
+        ];
+      };
       pine64-rock64v2 = bootstrapSystem {
         modules = [
           self.nixosModules.boards.pine64.rock64v2
