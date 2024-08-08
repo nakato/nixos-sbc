@@ -36,6 +36,17 @@
           self.nixosModules.boards.bananapi.bpir3
         ];
       };
+
+      bananapi-bpir3_cross = bootstrapSystem {
+        modules = [
+          self.nixosModules.boards.bananapi.bpir3
+          {
+            nixpkgs.buildPlatform.system = "x86_64-linux";
+            nixpkgs.hostPlatform.system = "aarch64-linux";
+          }
+        ];
+      };
+
       pine64-rock64v2 = bootstrapSystem {
         modules = [
           self.nixosModules.boards.pine64.rock64v2
