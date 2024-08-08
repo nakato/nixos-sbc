@@ -3,8 +3,7 @@
   pkgs,
   sbcPkgs,
   ...
-}:
-let
+}: let
   rock64Uboot =
     if config.sbc.board.pine64.rock64.hardwareRevision == "v2"
     then sbcPkgs.ubootRock64v2

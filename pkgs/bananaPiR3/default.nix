@@ -12,43 +12,42 @@
   ubootTools,
   ...
 }: rec {
-  ubootBananaPiR3 =
-    buildSBCUBoot {
-      defconfig = "mt7986a_bpir3_sd_defconfig";
-      extraMeta.platforms = ["aarch64-linux"];
-      extraNativeBuildInputs = [pkg-config ncurses armTrustedFirmwareTools];
-      extraPatches = [
-        ./mt7986-persistent-mac-from-cpu-uid.patch
-        ./mt7986-persistent-wlan-mac-from-cpu-uid.patch
-      ];
-      postPatch = ''
-        cp ${./mt7986-nixos.env} board/mediatek/mt7986/mt7986-nixos.env
-        # Should include via CONFIG_DEVICE_TREE_INCLUDES, but regression in
-        # makefile is causing issues.
-        # Regression caused by a958988b62eb9ad33c0f41b4482cfbba4aa71564.
-        #
-        # For now, work around issue by copying dtsi into tree and referencing
-        # it in extraConfig using the relative path.
-        cp ${./mt7986-mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
-      '';
-      extraConfig = ''
-        CONFIG_ENV_SOURCE_FILE="mt7986-nixos"
-        # Unessessary as it's not actually used anywhere, value copied verbatum into env
-        CONFIG_DEFAULT_FDT_FILE="mediatek/mt7986a-bananapi-bpi-r3.dtb"
-        # Big kernels
-        CONFIG_SYS_BOOTM_LEN=0x6000000
-        # The following are used in the tooling to fixup MAC addresses
-        CONFIG_BOARD_LATE_INIT=y
-        CONFIG_SHA1=y
-        CONFIG_OF_BOARD_SETUP=y
-      '';
-      postBuild = ''
-        fiptool create --soc-fw ${armTrustedFirmwareMT7986}/bl31.bin --nt-fw u-boot.bin fip.bin
-        cp ${armTrustedFirmwareMT7986}/bl2.img bl2.img
-      '';
-      # FIXME: Should bl2 bundle here?
-      filesToInstall = ["bl2.img" "fip.bin"];
-    };
+  ubootBananaPiR3 = buildSBCUBoot {
+    defconfig = "mt7986a_bpir3_sd_defconfig";
+    extraMeta.platforms = ["aarch64-linux"];
+    extraNativeBuildInputs = [pkg-config ncurses armTrustedFirmwareTools];
+    extraPatches = [
+      ./mt7986-persistent-mac-from-cpu-uid.patch
+      ./mt7986-persistent-wlan-mac-from-cpu-uid.patch
+    ];
+    postPatch = ''
+      cp ${./mt7986-nixos.env} board/mediatek/mt7986/mt7986-nixos.env
+      # Should include via CONFIG_DEVICE_TREE_INCLUDES, but regression in
+      # makefile is causing issues.
+      # Regression caused by a958988b62eb9ad33c0f41b4482cfbba4aa71564.
+      #
+      # For now, work around issue by copying dtsi into tree and referencing
+      # it in extraConfig using the relative path.
+      cp ${./mt7986-mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
+    '';
+    extraConfig = ''
+      CONFIG_ENV_SOURCE_FILE="mt7986-nixos"
+      # Unessessary as it's not actually used anywhere, value copied verbatum into env
+      CONFIG_DEFAULT_FDT_FILE="mediatek/mt7986a-bananapi-bpi-r3.dtb"
+      # Big kernels
+      CONFIG_SYS_BOOTM_LEN=0x6000000
+      # The following are used in the tooling to fixup MAC addresses
+      CONFIG_BOARD_LATE_INIT=y
+      CONFIG_SHA1=y
+      CONFIG_OF_BOARD_SETUP=y
+    '';
+    postBuild = ''
+      fiptool create --soc-fw ${armTrustedFirmwareMT7986}/bl31.bin --nt-fw u-boot.bin fip.bin
+      cp ${armTrustedFirmwareMT7986}/bl2.img bl2.img
+    '';
+    # FIXME: Should bl2 bundle here?
+    filesToInstall = ["bl2.img" "fip.bin"];
+  };
 
   armTrustedFirmwareMT7986 =
     (buildArmTrustedFirmware rec {
