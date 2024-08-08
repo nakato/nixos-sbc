@@ -2,8 +2,7 @@
   config,
   pkgs,
   ...
-}:
-{
+}: {
   system.build.sdImage = pkgs.callPackage (
     {
       stdenv,
