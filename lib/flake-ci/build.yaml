@@ -1,0 +1,14 @@
+image: nixos/unstable
+packages:
+  nixos.hut
+  nixos.git
+  nixos.bash
+sources:
+  - git@git.sr.ht:~nakato/nixos-sbc
+environment:
+  NIX_CONFIG: |
+    experimental-features = nix-command flakes
+tasks:
+  - update: |
+      bash lib/flake-ci/check-update-changes.sh
+
