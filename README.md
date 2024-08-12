@@ -32,22 +32,23 @@ Work in progress:
  * Cachix
 
 
-## Single Board Computers
+## Supported Single Board Computer Quick Reference
 
-| Board Manufacturer | Model           | Bootable |
-| ------------------ | --------------- | -------- |
-| BananaPi           | BPiR3           | ✓        |
-| Pine64             | Rock64          | ✓        |
-| RaspberryPi        | RPi4            | ✓        |
-| Xunlong            | OrangePi 5B     | ✓        |
+For full details, see board page.  Every SBC in existance has quirks, some bigger some smaller, see the board Info pages for known quirks and issues.
+Info pages are currently not standarised and may not be complete.
 
+| Board Manufacturer | Model           | Bootable | Kernel      | Have SBC | Board page |
+| ------------------ | --------------- | -------- | ----------- | -------- | ---------- |
+| BananaPi           | BPiR3           | Yes      | Upstream¹˒² | Yes      | [Info](/modules/boards/bananapi/bpir3/info.md) |
+| Pine64             | Rock64v2        | Yes      | Upstream    | Yes      | [Info](/modules/boards/pine64/rock64/info.md) |
+| Pine64             | Rock64v3        | Yes      | Upstream    | Yes      | [Info](/modules/boards/pine64/rock64/info.md) |
+| RaspberryPi        | RPi4            | Yes      | Upstream    | Yes      | [Info](/modules/boards/raspberrypi/rpi4/info.md) |
+| Xunlong            | OrangePi 5      | Untested | Upstream    | No       | [Info](/modules/boards/xunlong/opi5/info.md) |
+| Xunlong            | OrangePi 5B     | Yes      | Upstream³   | Yes      | [Info](/modules/boards/xunlong/opi5/info.md) |
 
-| Icon | Description  |
-| ---- | ------------ |
-| ✓    | Supported    |
-| ✗    | Missing      |
-| ○    | Not Required |
-
+* ¹ Requires custom build
+* ² Has minor patching
+* ³ DTB is out-of-tree
 
 ## Supported Devices
 
