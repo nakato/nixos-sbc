@@ -16,6 +16,9 @@
       defconfig = "mt7988_sd_rfb_defconfig";
       extraMeta.platforms = ["aarch64-linux"];
       extraNativeBuildInputs = [pkg-config ncurses armTrustedFirmwareTools];
+      extraPatches = [
+        ./mt7988-persistent-mac-from-cpu-uid.patch
+      ];
       postPatch = ''
         cp ${./mt7988-nixos.env} board/mediatek/mt7988/mt7988-nixos.env
         # Should include via CONFIG_DEVICE_TREE_INCLUDES, but regression in
@@ -32,6 +35,9 @@
         CONFIG_DEFAULT_FDT_FILE="mediatek/mt7988a-bananapi-bpi-r4.dtb"
         # Big kernels
         CONFIG_SYS_BOOTM_LEN=0x6000000
+        # The following are used in the tooling to fixup MAC addresses
+        CONFIG_BOARD_LATE_INIT=y
+        CONFIG_SHA1=y
       '';
       postBuild = ''
         fiptool create --soc-fw ${armTrustedFirmwareMT7988}/bl31.bin --nt-fw u-boot.bin fip.bin
