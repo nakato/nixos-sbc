@@ -8,9 +8,15 @@
     nixpkgs,
     ...
   }: let
-    _lib = import ./lib {inherit nixpkgs self;};
+    _lib = import ./lib {
+      inherit nixpkgs self;
+      lib = nixpkgs.lib;
+    };
     inherit (_lib) bootstrapSystem forAllSystems forSupportedSystems;
   in {
+    # Exposed for build tooling
+    inherit _lib;
+
     formatter = forAllSystems (
       system:
         nixpkgs.legacyPackages.${system}.alejandra
@@ -36,7 +42,6 @@
           self.nixosModules.boards.bananapi.bpir3
         ];
       };
-
       bananapi-bpir3_cross = bootstrapSystem {
         modules = [
           self.nixosModules.boards.bananapi.bpir3
@@ -46,7 +51,11 @@
           }
         ];
       };
-
+      bananapi-bpir4 = bootstrapSystem {
+        modules = [
+          self.nixosModules.boards.bananapi.bpir4
+        ];
+      };
       pine64-rock64v2 = bootstrapSystem {
         modules = [
           self.nixosModules.boards.pine64.rock64v2

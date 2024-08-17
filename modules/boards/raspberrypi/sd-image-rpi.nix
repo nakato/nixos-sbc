@@ -3,8 +3,7 @@
   pkgs,
   sbcPkgs,
   ...
-}:
-{
+}: {
   system.build.sdImage = pkgs.callPackage (
     {
       stdenv,

@@ -6,6 +6,7 @@
   raspberrypi-armstubs,
   raspberrypifw,
   writeText,
+  lib,
   ...
 }: let
   ubootRaspberryPi4 = buildSBCUBoot {
@@ -79,5 +80,8 @@ in {
     installPhase = ''
       cp firmware.img $out
     '';
+    meta = {
+      license = lib.licenses.unfreeRedistributableFirmware;
+    };
   };
 }
