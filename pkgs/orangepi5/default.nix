@@ -18,20 +18,16 @@
     filesToInstall = ["u-boot.itb" "idbloader.img" "u-boot-rockchip.bin" "u-boot-rockchip-spi.bin"];
   };
   overrideUbootAttrs = bVariant: oldAttrs: {
-    defconfig =
-      if bVariant
-      then "orangepi-5b-rk3588s_defconfig"
-      else "orangepi-5-rk3588s_defconfig";
     postPatch =
       oldAttrs.postPatch
       + ''
         cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
-        cp ${./rk3588s-orangepi-5b.dts} arch/arm/dts/rk3588s-orangepi-5b.dts
+        cp ${./rk3588s-orangepi-5b.dts} dts/upstream/src/arm64/rockchip/rk3588s-orangepi-5b.dts
         cp ${./rk3588s-orangepi-5b-u-boot.dtsi} arch/arm/dts/rk3588s-orangepi-5b-u-boot.dtsi
-        sed -i 's/rk3588s-orangepi-5.dtb/rk3588s-orangepi-5.dtb rk3588s-orangepi-5b.dtb/' arch/arm/dts/Makefile
-        cp configs/orangepi-5-rk3588s_defconfig configs/orangepi-5b-rk3588s_defconfig
-        sed -i 's/rk3588s-orangepi-5/rk3588s-orangepi-5b/' configs/orangepi-5b-rk3588s_defconfig
       '';
+    postConfigure = lib.optionalString bVariant ''
+      sed -i 's/rk3588s-orangepi-5/rk3588s-orangepi-5b/' .config
+    '';
     extraConfig =
       oldAttrs.extraConfig
       + ''
