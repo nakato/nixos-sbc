@@ -55,8 +55,8 @@ in {
     postPatch =
       oldAttrs.postPatch
       + ''
-        cp ${./rk3588s-orangepi-5b.dts} arch/arm64/boot/dts/rockchip/
-        echo "dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5b.dtb" >> arch/arm64/boot/dts/rockchip/Makefile
+        cp ${./rk3588s-orangepi-5b.dts} arch/arm64/boot/dts/rockchip/rk3588s-orangepi-5b.dts
+        echo 'dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5b.dtb' >> arch/arm64/boot/dts/rockchip/Makefile
       '';
   });
 }
