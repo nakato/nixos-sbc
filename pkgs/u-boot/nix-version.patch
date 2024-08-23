@@ -1,0 +1,13 @@
+diff --git a/scripts/setlocalversion b/scripts/setlocalversion
+index 4a63143706..0f609d71bb 100755
+--- a/scripts/setlocalversion
++++ b/scripts/setlocalversion
+@@ -185,4 +185,8 @@ else
+ 	fi
+ fi
+ 
++if test -n "$NIX_BUILD_TOP"; then
++	res="$res-$(basename $out | cut -d - -f 1)"
++fi
++
+ echo "$res"

@@ -31,6 +31,7 @@
       url = "https://patchwork.ozlabs.org/project/uboot/patch/20240618214138.3212175-1-alexthreed@gmail.com/raw/";
       hash = "sha256-eACraQRT+ejM6pIwr08T2vqqEN+AAvtk37e3Q4a+BKA=";
     })
+    ./nix-version.patch
   ];
 in {
   buildSBCUBoot = args:
