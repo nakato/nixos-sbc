@@ -324,6 +324,9 @@
         NFT_NUMGEN = module;
         NFT_CT = module;
         NFT_CONNLIMIT = module;
+        NFT_FIB_IPV4 = module;
+        NFT_FIB_IPV6 = module;
+        NFT_FIB_INET = module;
         NFT_LOG = module;
         NFT_LIMIT = module;
         NFT_MASQ = module;
