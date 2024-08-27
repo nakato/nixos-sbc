@@ -36,7 +36,7 @@ in {
 
     sbc.enable = true;
 
-    boot.kernelPackages = pkgs.linuxPackages_6_9;
+    boot.kernelPackages = pkgs.linuxPackages_6_10;
     hardware.deviceTree = {
       kernelPackage = sbcPkgs.orangePi5bDTBs;
       filter = "rk3588s*orangepi*.dtb";
