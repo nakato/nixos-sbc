@@ -8,11 +8,64 @@
     nixpkgs,
     ...
   }: let
+    lib = nixpkgs.lib;
+
     _lib = import ./lib {
-      inherit nixpkgs self;
-      lib = nixpkgs.lib;
+      inherit nixpkgs lib self;
     };
-    inherit (_lib) bootstrapSystem forAllSystems forSupportedSystems;
+    inherit (_lib) forAllSystems forSupportedSystems;
+
+    mkNixosConfigurations = let
+      devices = [
+        {
+          manufacturer = "bananapi";
+          model = "bpir3";
+        }
+        {
+          manufacturer = "bananapi";
+          model = "bpir4";
+        }
+        {
+          manufacturer = "pine64";
+          model = "rock64v2";
+        }
+        {
+          manufacturer = "pine64";
+          model = "rock64v3";
+        }
+        {
+          manufacturer = "raspberrypi";
+          model = "rpi4";
+        }
+        {
+          manufacturer = "xunlong";
+          model = "opi5b";
+        }
+      ];
+
+      mkNixosConfigurations = builtins.listToAttrs (builtins.map
+        (device: {
+          name = "${device.manufacturer}-${device.model}";
+          value = lib.nixosSystem {
+            system =
+              if device ? system
+              then device.system
+              else "aarch64-linux";
+            modules =
+              [
+                self.nixosModules.default
+                self.nixosModules.boards.${device.manufacturer}.${device.model}
+                {
+                  sbc.bootstrap.initialBootstrapImage = true;
+                  sbc.version = "0.2";
+                }
+              ]
+              ++ (lib.optionals (device ? extraModules) device.extraModules);
+          };
+        })
+        devices);
+    in
+      mkNixosConfigurations;
   in {
     # Exposed for build tooling
     inherit _lib;
@@ -22,12 +75,7 @@
         nixpkgs.legacyPackages.${system}.alejandra
     );
 
-    packages = forSupportedSystems (
-      system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-        import ./pkgs {inherit pkgs;}
-    );
+    packages = forSupportedSystems (system: import ./pkgs {pkgs = nixpkgs.legacyPackages.${system};});
 
     nixosModules = import ./modules;
     # deviceBuilder is an unstable API.  I'm throwing it in quickly
@@ -36,37 +84,6 @@
       rtc.ds3231 = import ./lib/devices/rtc/ds3231/create.nix;
     };
 
-    nixosConfigurations = {
-      bananapi-bpir3 = bootstrapSystem {
-        modules = [
-          self.nixosModules.boards.bananapi.bpir3
-        ];
-      };
-      bananapi-bpir4 = bootstrapSystem {
-        modules = [
-          self.nixosModules.boards.bananapi.bpir4
-        ];
-      };
-      pine64-rock64v2 = bootstrapSystem {
-        modules = [
-          self.nixosModules.boards.pine64.rock64v2
-        ];
-      };
-      pine64-rock64v3 = bootstrapSystem {
-        modules = [
-          self.nixosModules.boards.pine64.rock64v3
-        ];
-      };
-      raspberrypi-rpi4 = bootstrapSystem {
-        modules = [
-          self.nixosModules.boards.raspberrypi.rpi4
-        ];
-      };
-      xunlong-opi5b = bootstrapSystem {
-        modules = [
-          self.nixosModules.boards.xunlong.opi5b
-        ];
-      };
-    };
+    nixosConfigurations = mkNixosConfigurations;
   };
 }
