@@ -13,9 +13,9 @@
     _lib = import ./lib {
       inherit nixpkgs lib self;
     };
-    inherit (_lib) forAllSystems forSupportedHostSystems;
+    inherit (_lib) forAllSystems forSupportedHostSystems forSupportedBuildSystems;
 
-    mkNixosConfigurations = let
+    mkNixosConfigurations = {buildSystem ? null}: let
       devices = [
         {
           manufacturer = "bananapi";
@@ -46,7 +46,7 @@
       mkNixosConfigurations = builtins.listToAttrs (builtins.map
         (device: {
           name = "${device.manufacturer}-${device.model}";
-          value = lib.nixosSystem {
+          value = lib.nixosSystem rec {
             system =
               if device ? system
               then device.system
@@ -58,9 +58,13 @@
                 {
                   sbc.bootstrap.initialBootstrapImage = true;
                   sbc.version = "0.3";
+                  nixpkgs.hostPlatform.system = system;
                 }
               ]
-              ++ (lib.optionals (device ? extraModules) device.extraModules);
+              ++ (lib.optionals (device ? extraModules) device.extraModules)
+              ++ (lib.optional (buildSystem != null) {
+                nixpkgs.buildPlatform.system = buildSystem;
+              });
           };
         })
         devices);
@@ -84,6 +88,14 @@
       rtc.ds3231 = import ./lib/devices/rtc/ds3231/create.nix;
     };
 
-    nixosConfigurations = mkNixosConfigurations;
+    nixosConfigurations = mkNixosConfigurations {};
+
+    sdImages = forSupportedBuildSystems (
+      system: let
+        nixosCrossConfigurations = mkNixosConfigurations {buildSystem = system;};
+      in
+        lib.mapAttrs' (name: value: lib.nameValuePair "sdImage-${name}" value.config.system.build.sdImage)
+        nixosCrossConfigurations
+    );
   };
 }

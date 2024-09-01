@@ -104,9 +104,14 @@ nix build '/path/to/your-flake-repo#nixosConfigurations.hostname.config.system.b
 
 ## Bootstrap images
 
-Bootstrap images are provided for use when a board of the same architecture
-as the target, with nix installed, is not available to produce a pre-customised
-image.
+Bootstrap images can be used when you want to produce a bootable system
+without pre-customising the devices configuration.  These images are best
+built on the same architecture as the target system to take advantage of
+caching; however, they can be cross-compiled if required.
+
+`nix build "github:nakato/nixos-sbc#sdImages.${buildHostArchitecture}.sdImage-${manufacturer}-${model}"`
+For example:
+`nix build "github:nakato/nixos-sbc#sdImages.x86_64-linux.sdImage-bananapi-bpir4"`
 
 Once the image is provisioned onto the SD card, the device will DHCP on all
 available interfaces.  Log into the root user with the password
