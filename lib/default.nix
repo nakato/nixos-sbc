@@ -29,6 +29,7 @@
             {
               sbc.bootstrap.initialBootstrapImage = true;
               sbc.version = "0.2";
+              nixpkgs.hostPlatform.system = system;
             }
           ];
       }

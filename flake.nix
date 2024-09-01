@@ -8,35 +8,14 @@
     nixpkgs,
     ...
   }: let
+    lib = nixpkgs.lib;
+
     _lib = import ./lib {
-      inherit nixpkgs self;
-      lib = nixpkgs.lib;
+      inherit nixpkgs lib self;
     };
-    inherit (_lib) bootstrapSystem forAllSystems forSupportedHostSystems;
-  in {
-    # Exposed for build tooling
-    inherit _lib;
+    inherit (_lib) bootstrapSystem forAllSystems supportedBuildSystems supportedHostSystems;
 
-    formatter = forAllSystems (
-      system:
-        nixpkgs.legacyPackages.${system}.alejandra
-    );
-
-    packages = forSupportedHostSystems (
-      system: let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-        import ./pkgs {inherit pkgs;}
-    );
-
-    nixosModules = import ./modules;
-    # deviceBuilder is an unstable API.  I'm throwing it in quickly
-    # to unblock my usage.
-    deviceBuilder = {
-      rtc.ds3231 = import ./lib/devices/rtc/ds3231/create.nix;
-    };
-
-    nixosConfigurations = let
+    mkNixosConfigurations = {buildSystem ? null}: let
       systems = [
         {
           manufacturer = "bananapi";
@@ -68,11 +47,63 @@
         (system: {
           name = "${system.manufacturer}-${system.model}";
           value = bootstrapSystem {
-            modules = [self.nixosModules.boards.${system.manufacturer}.${system.model}];
+            modules =
+              [self.nixosModules.boards.${system.manufacturer}.${system.model}]
+              ++ (
+                if buildSystem == null
+                then []
+                else [
+                  {
+                    nixpkgs.buildPlatform.system = buildSystem;
+                  }
+                ]
+              );
           };
         })
         systems);
     in
       mkNixOsConfigurations;
+  in {
+    # Exposed for build tooling
+    inherit _lib;
+
+    formatter = forAllSystems (
+      system:
+        nixpkgs.legacyPackages.${system}.alejandra
+    );
+
+    packages = forAllSystems (system:
+      (
+        if builtins.elem system supportedHostSystems
+        then
+          (
+            let
+              pkgs = nixpkgs.legacyPackages.${system};
+            in
+              import ./pkgs {inherit pkgs;}
+          )
+        else {}
+      )
+      // (
+        if builtins.elem system supportedBuildSystems
+        then
+          (
+            let
+              nixosCrossConfigurations = mkNixosConfigurations {buildSystem = system;};
+            in
+              lib.mapAttrs' (name: value: lib.nameValuePair "sdImage-${name}" value.config.system.build.sdImage)
+              nixosCrossConfigurations
+          )
+        else {}
+      ));
+
+    nixosModules = import ./modules;
+    # deviceBuilder is an unstable API.  I'm throwing it in quickly
+    # to unblock my usage.
+    deviceBuilder = {
+      rtc.ds3231 = import ./lib/devices/rtc/ds3231/create.nix;
+    };
+
+    nixosConfigurations = mkNixosConfigurations {};
   };
 }
