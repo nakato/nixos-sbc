@@ -23,13 +23,11 @@ Currently included:
    * Single BTRFS partition with subvolumes (default)
    * Single BTRFS partition
    * Single ext4 partition
+ * Cachix binary cache
 
 Alpha (Functional, but subject to change):
  * Nix board definitions
  * Nix device definitions
-
-Work in progress:
- * Cachix
 
 
 ## Supported Single Board Computer Quick Reference
@@ -69,24 +67,28 @@ Not all devices are supported on all boards.
   description = "NixOS configuration with flakes";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-sbc = {
-      url = "github:nakato/nixos-sbc/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixos-sbc.url = "github:nakato/nixos-sbc/master";
   };
 
   outputs = { self, nixpkgs, nixos-sbc }: {
     nixosConfigurations = {
-      hostname = nixpkgs.lib.nixosSystem {
+      my-sbc = nixpkgs.lib.nixosSystem {
         modules = [
           nixos-sbc.nixosModules.default
           # Ex: nixos-sbc.nixosModules.boards.bananapi.bpir3
           nixos-sbc.nixosModules.boards.<BOARD MFG>.<BOARD MODEL>
           {
-            sbc.version = "0.2";
+            sbc.version = "0.3";
 
             # User config, networking, etc
           }
+        ];
+      };
+      x86-operator = nixpkgs.lib.nixosSystem {
+        modules = [
+          # If foreign architecture is performing "nix build"/"nixos-rebuild" commands targeting SBC
+          # and binary cache usage is desired it must be included on host performing evaluation.
+          nixos-sbc.nixosModules.cache
         ];
       };
     };

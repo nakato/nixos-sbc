@@ -10,6 +10,7 @@ in {
     ./board
     ./boot
     ./bootstrap
+    ./cache.nix
     ./filesystem.nix
     ./wireless
   ];
@@ -18,7 +19,7 @@ in {
     enable = mkEnableOption "Include SBC configuration";
 
     version = mkOption {
-      type = types.enum ["99.99" "0.2" "0.1"];
+      type = types.enum ["99.99" "0.3" "0.2" "0.1"];
       default = "99.99";
       description = mdDoc ''
         Configuration version used on generated system.
@@ -40,7 +41,8 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    warnings = []
+    warnings =
+      []
       ++ lib.optionals (cfg.version == "99.99") [
         ''
           config.sbc.version is unset, breaking config changes may occur that
