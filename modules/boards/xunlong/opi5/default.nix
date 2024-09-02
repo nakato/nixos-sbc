@@ -43,6 +43,9 @@ in {
     };
     sbc.board.xunlong.opi5.ubootPackage = lib.mkIf (cfg.hardwareVariant == "b") sbcPkgs.ubootOrangePi5b;
 
+    # GPU requres firmware
+    hardware.enableRedistributableFirmware = true;
+
     sbc.board = {
       vendor = "xunlong";
       model = "OrangePi5${variantText}";

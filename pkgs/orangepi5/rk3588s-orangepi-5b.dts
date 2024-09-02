@@ -6,7 +6,7 @@
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/input/input.h>
 #include <dt-bindings/pinctrl/rockchip.h>
-// #include <dt-bindings/usb/pd.h>  // 6.10
+#include <dt-bindings/usb/pd.h>
 #include "rk3588s.dtsi"
 
 / {
@@ -173,12 +173,10 @@
 	status = "okay";
 };
 
-/* 6.10
 &gpu {
 	mali-supply = <&vdd_gpu_s0>;
 	status = "okay";
 };
-*/
 
 &i2c0 {
 	pinctrl-names = "default";
@@ -246,7 +244,6 @@
 	pinctrl-0 = <&i2c6m3_xfer>;
 	status = "okay";
 
-	/*  6.10
 	usbc0: usb-typec@22 {
 		compatible = "fcs,fusb302";
 		reg = <0x22>;
@@ -296,7 +293,6 @@
 			};
 		};
 	};
-	*/
 
 	hym8563: rtc@51 {
 		compatible = "haoyu,hym8563";
@@ -729,7 +725,6 @@
 	status = "okay";
 };
 
-/* 6.10
 &u2phy0 {
 	status = "okay";
 };
@@ -737,7 +732,6 @@
 &u2phy0_otg {
 	status = "okay";
 };
-*/
 
 &u2phy2 {
 	status = "okay";
@@ -766,7 +760,6 @@
 	pinctrl-0 = <&uart9m2_xfer &uart9m2_ctsn>;
 };
 
-/* 6.10
 &usbdp_phy0 {
 	mode-switch;
 	orientation-switch;
@@ -789,7 +782,6 @@
 		};
 	};
 };
-*/
 
 &usb_host0_ehci {
 	status = "okay";
@@ -799,7 +791,6 @@
 	status = "okay";
 };
 
-/*
 &usb_host0_xhci {
 	dr_mode = "otg";
 	usb-role-switch;
@@ -811,7 +802,6 @@
 		};
 	};
 };
-*/
 
 &usb_host1_ehci {
 	status = "okay";
