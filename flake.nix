@@ -12,7 +12,7 @@
       inherit nixpkgs self;
       lib = nixpkgs.lib;
     };
-    inherit (_lib) bootstrapSystem forAllSystems forSupportedSystems;
+    inherit (_lib) bootstrapSystem forAllSystems forSupportedHostSystems;
   in {
     # Exposed for build tooling
     inherit _lib;
@@ -22,7 +22,7 @@
         nixpkgs.legacyPackages.${system}.alejandra
     );
 
-    packages = forSupportedSystems (
+    packages = forSupportedHostSystems (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
       in
