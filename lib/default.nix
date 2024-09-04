@@ -7,8 +7,8 @@
 
   forAllSystems = forSystems (builtins.attrNames nixpkgs.legacyPackages);
 
-  supportedSystems = ["aarch64-linux" "riscv64-linux"];
-  forSupportedSystems = forSystems supportedSystems;
+  supportedHostSystems = ["aarch64-linux" "riscv64-linux"];
+  forSupportedHostSystems = forSystems supportedHostSystems;
 
   builders = let
     # Return true if attr exists and is a derivation.

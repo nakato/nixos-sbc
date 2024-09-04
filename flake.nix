@@ -13,7 +13,7 @@
     _lib = import ./lib {
       inherit nixpkgs lib self;
     };
-    inherit (_lib) forAllSystems forSupportedSystems;
+    inherit (_lib) forAllSystems forSupportedHostSystems;
 
     mkNixosConfigurations = let
       devices = [
@@ -75,7 +75,7 @@
         nixpkgs.legacyPackages.${system}.alejandra
     );
 
-    packages = forSupportedSystems (system: import ./pkgs {pkgs = nixpkgs.legacyPackages.${system};});
+    packages = forSupportedHostSystems (system: import ./pkgs {pkgs = nixpkgs.legacyPackages.${system};});
 
     nixosModules = import ./modules;
     # deviceBuilder is an unstable API.  I'm throwing it in quickly
