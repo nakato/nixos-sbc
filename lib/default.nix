@@ -7,6 +7,9 @@
 
   forAllSystems = forSystems (builtins.attrNames nixpkgs.legacyPackages);
 
+  supportedBuildSystems = ["aarch64-linux" "riscv64-linux" "x86_64-linux"];
+  forSupportedBuildSystems = forSystems supportedBuildSystems;
+
   supportedHostSystems = ["aarch64-linux" "riscv64-linux"];
   forSupportedHostSystems = forSystems supportedHostSystems;
 
