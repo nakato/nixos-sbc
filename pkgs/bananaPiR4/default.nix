@@ -9,6 +9,7 @@
   ubootTools,
   linuxKernel,
   linux_6_10,
+  lib,
   ...
 }: rec {
   ubootBananaPiR4 =
@@ -68,6 +69,19 @@
 
 
   linuxPackages_frankw_6_10_bananaPiR4 = linuxKernel.packagesFor (linux_6_10.override {
+    autoModules = false;
+
+    structuredExtraConfig = with lib.kernel; {
+      BTRFS_FS = module;
+      BTRFS_FS_POSIX_ACL = yes;
+
+      # Disable extremely unlikely features to reduce build storage requirements and time.
+      FB = lib.mkForce no;
+      DRM = lib.mkForce no;
+      SOUND = no;
+      INFINIBAND = lib.mkForce no;
+    };
+
     argsOverride = {
       src = fetchFromGitHub {
         owner = "frank-w";
