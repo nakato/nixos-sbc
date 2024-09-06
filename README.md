@@ -38,7 +38,7 @@ Info pages are currently not standarised and may not be complete.
 | Board Manufacturer | Model           | Bootable | Kernel      | Have SBC | Board page |
 | ------------------ | --------------- | -------- | ----------- | -------- | ---------- |
 | BananaPi           | BPiR3           | Yes      | Upstream¹˒² | Yes      | [Info](/modules/boards/bananapi/bpir3/info.md) |
-| BananaPi           | BPiR4           | Yes      | Vendor      | No       | [Info](/modules/boards/bananapi/bpir4/info.md) |
+| BananaPi           | BPiR4           | Yes      | Vendor¹     | Yes⁴     | [Info](/modules/boards/bananapi/bpir4/info.md) |
 | Pine64             | Rock64v2        | Yes      | Upstream    | Yes      | [Info](/modules/boards/pine64/rock64/info.md) |
 | Pine64             | Rock64v3        | Yes      | Upstream    | Yes      | [Info](/modules/boards/pine64/rock64/info.md) |
 | RaspberryPi        | RPi4            | Yes      | Upstream    | Yes      | [Info](/modules/boards/raspberrypi/rpi4/info.md) |
@@ -48,6 +48,7 @@ Info pages are currently not standarised and may not be complete.
 * ¹ Requires custom build
 * ² Has minor patching
 * ³ DTB is out-of-tree
+* ⁴ Do not own WiFi card
 
 ## Supported Devices
 

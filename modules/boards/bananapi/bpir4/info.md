@@ -17,6 +17,11 @@ The project maintainer currently does not have access to the hardware.
 Kernel param `clk_ignore_unused=1` is set as if linux shuts down unknown clocks the device stops functioning.  This means the hardware is in a state where linux doesn't know about clocks it needs to manage to keep the system stable.
 
 
+### PCIe
+
+PCIe root does not appear, meaning PCIe is not functional at this time.
+
+
 ### RTC
 
 Missing kernel driver.
@@ -38,4 +43,6 @@ As referenced in the pull that added support:
 
 ### MAC Addresses
 
-It is currently unknown where MAC addresses are coming from, I'm guessing ethernet is using random MACs.  WiFi is currently uninvestigated.
+Ethernet MAC are set as Locally Administered and are generated from a device-unique CPU ID.
+
+WiFi has not been looked into due to lack of hardware.  If you have hardwardware with wifi, get in touch.
