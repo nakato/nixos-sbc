@@ -22,11 +22,6 @@ Kernel param `clk_ignore_unused=1` is set as if linux shuts down unknown clocks 
 PCIe root does not appear, meaning PCIe is not functional at this time.
 
 
-### RTC
-
-Missing kernel driver.
-
-
 ### Module loads at boot
 
 As referenced in the pull that added support:
