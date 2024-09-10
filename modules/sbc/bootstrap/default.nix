@@ -107,11 +107,21 @@ in {
             mkdir ./files/boot
             ${config.boot.loader.generic-extlinux-compatible.populateCmd} -c ${config.system.build.toplevel} -d ./files/boot
           '';
-          subvolMap = {
-            "/" = "@";
-            "/nix" = "@nix";
-            "/boot" = "@boot";
-          };
+          # FIXME: Using subvols without / should assert (also will fail to build)
+          # FIXME: Nested subvols needs to assert or gain ordering logic.
+          subvolMap = let
+            # UUID is for BTRFS root device, not just subvol ones.  Ooops.
+            btrfsSubVolDevice = "/dev/disk/by-uuid/18db6211-ac36-42c1-a22f-5e15e1486e0d";
+            fileSystems = builtins.filter (fs: ((fs.device == btrfsSubVolDevice) && (builtins.any (opt: lib.hasPrefix "subvol=" opt) fs.options))) config.system.build.fileSystems;
+            stripSubVolOption = opt: lib.removePrefix "subvol=" opt;
+            getSubVolOption = opts: stripSubVolOption (builtins.head (builtins.filter (opt: lib.hasPrefix "subvol=" opt) opts));
+            subvolMap = builtins.listToAttrs (builtins.map (fs: {
+                name = "${fs.mountPoint}";
+                value = "${getSubVolOption fs.options}";
+              })
+              fileSystems);
+          in
+            subvolMap;
         };
       in
         if (builtins.elem cfg.rootFilesystem ["btrfs" "btrfs-subvol"])
@@ -120,7 +130,7 @@ in {
 
       boot.postBootCommands = let
         btrfsResizeCommands = ''
-          ${pkgs.btrfs-progs}/bin/btrfs filesystem resize max /
+          ${pkgs.btrfs-progs}/bin/btrfs filesystem resize max $rootPath
         '';
         ext4ResizeCommands = ''
           ${pkgs.e2fsprogs}/bin/resize2fs $rootPart
@@ -130,7 +140,7 @@ in {
           then btrfsResizeCommands
           else ext4ResizeCommands;
         registrationPath =
-          if (cfg.rootFilesystem == "btrfs-subvol")
+          if (builtins.elem cfg.rootFilesystem ["btrfs" "btrfs-subvol"])
           then "/nix/nix-path-registration"
           else "/nix-path-registration";
       in ''
@@ -140,6 +150,13 @@ in {
           set -x
           # Figure out device names for the boot device and root filesystem.
           rootPart=$(${pkgs.util-linux}/bin/findmnt -n -o SOURCE /)
+          rootPath=/
+          if [ $rootPart = "none" ]; then
+            # If rootPart is none, then /nix is the source of our fs.
+            # This is for impermanence btrfs-subvol builds.
+            rootPart=$(${pkgs.util-linux}/bin/findmnt -n -o SOURCE /nix)
+            rootPath=/nix
+          fi
           # Remove BTRFS SubVol from rootPart if it exists
           rootPart=''${rootPart//\[*/}
           rootDevice=$(lsblk -npo PKNAME $rootPart)
