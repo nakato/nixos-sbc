@@ -129,9 +129,13 @@ in {
           if (builtins.elem cfg.rootFilesystem ["btrfs" "btrfs-subvol"])
           then btrfsResizeCommands
           else ext4ResizeCommands;
+        registrationPath =
+          if (cfg.rootFilesystem == "btrfs-subvol")
+          then "/nix/nix-path-registration"
+          else "/nix-path-registration";
       in ''
         # On the first boot do some maintenance tasks
-        if [ -f /nix-path-registration ]; then
+        if [ -f ${registrationPath} ]; then
           set -euo pipefail
           set -x
           # Figure out device names for the boot device and root filesystem.
@@ -147,14 +151,14 @@ in {
           ${resizeCommands}
 
           # Register the contents of the initial Nix store
-          ${config.nix.package.out}/bin/nix-store --load-db < /nix-path-registration
+          ${config.nix.package.out}/bin/nix-store --load-db < ${registrationPath}
 
           # nixos-rebuild also requires a "system" profile and an /etc/NIXOS tag.
           touch /etc/NIXOS
           ${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --set /run/current-system
 
           # Prevents this from running on later boots.
-          rm -f /nix-path-registration
+          rm -f ${registrationPath}
         fi
       '';
     })

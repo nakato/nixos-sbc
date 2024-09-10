@@ -67,7 +67,7 @@ pkgs.stdenv.mkDerivation {
         done
       )
 
-      cp ${sdClosureInfo}/registration ./rootImage/nix-path-registration
+      cp ${sdClosureInfo}/registration ./rootImage/nix/nix-path-registration
 
       ${rootSubvolCmd}
       ${subvolMovePaths}
