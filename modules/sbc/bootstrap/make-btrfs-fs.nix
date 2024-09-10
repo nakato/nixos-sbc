@@ -43,7 +43,7 @@ pkgs.stdenv.mkDerivation {
       '';
 
       filteredSubvolMap = builtins.removeAttrs subvolMap ["/"];
-      subvolMovePaths = builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (origPath: subvolPath: "mv ${rootImagePath}/${origPath} ./rootImage/${subvolPath}") filteredSubvolMap));
+      subvolMovePaths = builtins.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (origPath: subvolPath: "[ -d ${rootImagePath}/${origPath} ] && mv ${rootImagePath}/${origPath} ./rootImage/${subvolPath} || mkdir ./rootImage/${subvolPath}") filteredSubvolMap));
       subvolMkfsArgs = builtins.concatStringsSep " " (builtins.attrValues (builtins.mapAttrs (_: subvolPath: "--subvol \"${subvolPath}\"") subvolMap));
     in
     ''
