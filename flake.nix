@@ -57,7 +57,7 @@
                 self.nixosModules.boards.${device.manufacturer}.${device.model}
                 {
                   sbc.bootstrap.initialBootstrapImage = true;
-                  sbc.version = "0.2";
+                  sbc.version = "0.3";
                 }
               ]
               ++ (lib.optionals (device ? extraModules) device.extraModules);
