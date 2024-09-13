@@ -27,6 +27,13 @@ in {
       );
     }
     (lib.mkIf (config.sbc.enable && cfg.useDefaultLayout == "btrfs-subvol") {
+      assertions = [
+        {
+          assertion = builtins.all (fs: (fs.device == "/dev/disk/by-uuid/18db6211-ac36-42c1-a22f-5e15e1486e0d") -> !(builtins.any (opt: lib.hasPrefix "subvolid=" opt) fs.options)) config.system.build.fileSystems;
+          message = "subvolid is not idempotent, can't reproduce, refusing to build";
+        }
+      ];
+
       fileSystems = {
         "/" = {
           device = "/dev/disk/by-uuid/18db6211-ac36-42c1-a22f-5e15e1486e0d";
