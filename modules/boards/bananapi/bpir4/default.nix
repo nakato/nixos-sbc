@@ -43,6 +43,14 @@
       };
 
       # uart.devices.uart1 not currently in DT.  GPIO header pins 11, 13.
+
+      rtc.devices.pcf8563 = {
+        status = "okay";
+        enable = lib.mkDefault false;
+        disableMethod.dtOverlay = {
+          enable = true;
+        };
+      };
     };
 
     # Custom kernel is required as bpi-r4 does not have enough upstream support.
