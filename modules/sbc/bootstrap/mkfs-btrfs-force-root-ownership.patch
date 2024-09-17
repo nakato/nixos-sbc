@@ -1,0 +1,15 @@
+diff --git a/mkfs/rootdir.c b/mkfs/rootdir.c
+index 70cf0f84..66515a19 100644
+--- a/mkfs/rootdir.c
++++ b/mkfs/rootdir.c
+@@ -264,8 +264,8 @@ static void stat_to_inode_item(struct btrfs_inode_item *dst, const struct stat *
+ 		btrfs_set_stack_inode_size(dst, st->st_size);
+ 	btrfs_set_stack_inode_nbytes(dst, 0);
+ 	btrfs_set_stack_inode_block_group(dst, 0);
+-	btrfs_set_stack_inode_uid(dst, st->st_uid);
+-	btrfs_set_stack_inode_gid(dst, st->st_gid);
++	btrfs_set_stack_inode_uid(dst, 0);
++	btrfs_set_stack_inode_gid(dst, 0);
+ 	btrfs_set_stack_inode_mode(dst, st->st_mode);
+ 	btrfs_set_stack_inode_rdev(dst, 0);
+ 	btrfs_set_stack_inode_flags(dst, 0);
