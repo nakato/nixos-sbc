@@ -50,6 +50,7 @@ in {
     name = "raspberryPiFirmware.img";
 
     nativeBuildInputs = [dosfstools mtools];
+    dontFixup = true;
 
     buildPhase = ''
       size=$((32 * 1024 * 1024))

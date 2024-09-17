@@ -73,7 +73,7 @@ pkgs.stdenv.mkDerivation {
       ${subvolMovePaths}
 
       touch $img
-      faketime -f "1970-01-01 00:00:01" unshare -U -r mkfs.btrfs -L ${volumeLabel} -U ${uuid} ${subvolMkfsArgs} -r ./rootImage --shrink $img
+      faketime -f "1970-01-01 00:00:01" mkfs.btrfs -L ${volumeLabel} -U ${uuid} ${subvolMkfsArgs} -r ./rootImage --shrink $img
 
       if ! btrfs check $img; then
         echo "--- 'btrfs check' failed for BTRFS image ---"

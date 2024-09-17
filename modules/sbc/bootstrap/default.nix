@@ -91,6 +91,9 @@ in {
               hash = "sha256-PgispmDnulTDeNnuEDdFO8FGWlGx/e4cP8MQMd9opFw=";
             };
 
+            patches = [
+              ./mkfs-btrfs-force-root-ownership.patch
+            ];
             postPatch = "";
 
             nativeBuildInputs =
