@@ -86,7 +86,7 @@
           dd conv=notrunc if=$root_fs of=$img seek=$rootPartStart
 
           if [ ${builtins.toString compress} = 1 ]; then
-            zstd --rm -T0 -19 $img
+            zstd --rm -T$NIX_BUILD_CORES -19 $img
           fi
         '';
       }
