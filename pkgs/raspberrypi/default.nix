@@ -18,10 +18,10 @@
     # But don't use a patch, because it breaks needlessly between versions.
     postPatch = ''
       sed -i \
-        -e 's|scriptaddr=0x02400000|scriptaddr=0x04500000|' \
-        -e 's|pxefile_addr_r=0x02500000|pxefile_addr_r=0x04600000|' \
-        -e 's|fdt_addr_r=0x02600000|fdt_addr_r=0x04700000|' \
-        -e 's|ramdisk_addr_r=0x02700000|ramdisk_addr_r=0x04800000|' \
+        -e 's|scriptaddr=0x02400000|scriptaddr=0x08080000|' \
+        -e 's|pxefile_addr_r=0x02500000|pxefile_addr_r=0x08180000|' \
+        -e 's|fdt_addr_r=0x02600000|fdt_addr_r=0x08280000|' \
+        -e 's|ramdisk_addr_r=0x02700000|ramdisk_addr_r=0x08380000|' \
         board/raspberrypi/rpi/rpi.env
 
       cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
