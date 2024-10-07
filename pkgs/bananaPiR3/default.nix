@@ -6,7 +6,7 @@
   fetchFromGitHub,
   lib,
   linuxKernel,
-  linux_6_10,
+  linux_6_11,
   ncurses,
   pkg-config,
   ubootTools,
@@ -68,7 +68,7 @@
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools];
     });
 
-  linuxPackages_6_10_bananaPiR3 = linuxKernel.packagesFor (linux_6_10.override {
+  linuxPackages_6_11_bananaPiR3 = linuxKernel.packagesFor (linux_6_11.override {
     kernelPatches = [
       {
         # Cold boot PCIe/NVMe have stability issues.
@@ -145,11 +145,11 @@
   request its addition.  Even if it has been explicitly disabled below it is likely
   there won't be an issue re-enabling it.
   */
-  linuxPackages_6_10_bananaPiR3_minimal = linuxKernel.packagesFor (linuxPackages_6_10_bananaPiR3.kernel.override {
+  linuxPackages_6_11_bananaPiR3_minimal = linuxKernel.packagesFor (linuxPackages_6_11_bananaPiR3.kernel.override {
     autoModules = false;
 
     structuredExtraConfig = with lib.kernel;
-      linuxPackages_6_10_bananaPiR3.kernel.structuredExtraConfig
+      linuxPackages_6_11_bananaPiR3.kernel.structuredExtraConfig
       // {
         ARCH_ACTIONS = no;
         ARCH_SUNXI = no;
@@ -471,5 +471,5 @@
         MDIO_I2C = module;
       };
   });
-  linuxPackages_latest_bananaPiR3 = linuxPackages_6_10_bananaPiR3;
+  linuxPackages_latest_bananaPiR3 = linuxPackages_6_11_bananaPiR3;
 }
