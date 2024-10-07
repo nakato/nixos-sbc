@@ -3,7 +3,7 @@
   lib,
   armTrustedFirmwareRK3588,
   buildUBoot,
-  linuxPackages_6_10,
+  linuxPackages_6_11,
   rkbin,
   ...
 }: let
@@ -44,7 +44,7 @@
 in {
   ubootOrangePi5 = (patchSBCUBoot ubootOrangePi5).overrideAttrs (overrideUbootAttrs false);
   ubootOrangePi5b = (patchSBCUBoot ubootOrangePi5).overrideAttrs (overrideUbootAttrs true);
-  orangePi5bDTBs = linuxPackages_6_10.kernel.overrideAttrs (oldAttrs: {
+  orangePi5bDTBs = linuxPackages_6_11.kernel.overrideAttrs (oldAttrs: {
     pname = "linux-opi5b-dtbs";
     buildFlags = ["dtbs"];
     installTargets = ["dtbs_install"];
