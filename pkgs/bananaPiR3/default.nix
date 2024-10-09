@@ -229,6 +229,13 @@
 
         FPGA = no;
 
+        # Used by system.etc.overlay.enable as part of a perl-less build.
+        EROFS_FS = module;
+        EROFS_FS_ZIP_LZMA = yes;
+        EROFS_FS_ZIP_DEFLATE = yes;
+        EROFS_FS_ZIP_ZSTD = yes;
+        EROFS_FS_PCPU_KTHREAD = yes;
+
         ISO9660_FS = lib.mkForce no;
         UDF_FS = lib.mkForce no;
 

@@ -75,6 +75,13 @@
       BTRFS_FS = module;
       BTRFS_FS_POSIX_ACL = yes;
 
+      # Used by system.etc.overlay.enable as part of a perl-less build.
+      EROFS_FS = module;
+      EROFS_FS_ZIP_LZMA = yes;
+      EROFS_FS_ZIP_DEFLATE = yes;
+      EROFS_FS_ZIP_ZSTD = yes;
+      EROFS_FS_PCPU_KTHREAD = yes;
+
       # Disable extremely unlikely features to reduce build storage requirements and time.
       FB = lib.mkForce no;
       DRM = lib.mkForce no;
