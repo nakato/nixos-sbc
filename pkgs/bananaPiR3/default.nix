@@ -229,6 +229,8 @@
 
         FPGA = no;
 
+        AUTOFS_FS = module;
+
         # Used by system.etc.overlay.enable as part of a perl-less build.
         EROFS_FS = module;
         EROFS_FS_ZIP_LZMA = yes;
