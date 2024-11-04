@@ -20,6 +20,7 @@
 
       i2c.devices.i2c1 = {
         status = "okay";
+        disableMethod.dtOverlay.enable = true;
       };
 
       # uart0 is hardware uart, is enabled, but consumed by bluetooth
