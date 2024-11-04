@@ -19,7 +19,7 @@
       dtRoot = "brcm,bcm2711";
 
       i2c.devices.i2c1 = {
-        status = "disabled";
+        status = "okay";
       };
 
       # uart0 is hardware uart, is enabled, but consumed by bluetooth
@@ -43,7 +43,7 @@
         console = true;
       };
 
-      # Will these device names be accurate if 3 is enabled and 2 is not?
+      # Will the deviceName's be accurate if uart3 is enabled and uart2 is not?
       uart.devices.uart2 = {
         status = "disabled";
         baud = 115200;
