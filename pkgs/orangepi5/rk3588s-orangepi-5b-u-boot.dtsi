@@ -9,5 +9,6 @@
 };
 
 &fspim0_pins {
-	bootph-all;
+	bootph-pre-ram;
+	bootph-some-ram;
 };
