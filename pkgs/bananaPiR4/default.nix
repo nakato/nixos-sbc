@@ -96,8 +96,8 @@
         owner = "frank-w";
         repo = "BPI-Router-Linux";
         # 6.11-main HEAD 2024-10-07
-        rev = "dee38d4352bbe701daf5d28f5da8d9cc55d2f5f2";
-        hash = "sha256-KP5wlZDQSdiCvV19wOBkcitFA83LGHfNF8XdeWl9iGw=";
+        rev = "7a99830e634e841ea97796c35bbe0cf8e038ad9f";
+        hash = "sha256-6ng5eY8yM01asQjyF6IE1UGuZ6KeEsH2bwkVKwgx1xg=";
       };
       version = "6.11.0-bpi-r4";
       modDirVersion = "6.11.0-bpi-r4";
