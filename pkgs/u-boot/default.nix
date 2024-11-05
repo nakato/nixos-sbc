@@ -26,7 +26,6 @@
     CONFIG_CMD_BTRFS=y
   '';
   sbcExtraPatches = [
-    ./nix-version.patch
   ];
 in {
   buildSBCUBoot = args:
@@ -41,11 +40,17 @@ in {
       patches = (lib.optionals (args ? extraPatches) args.extraPatches) ++ sbcExtraPatches;
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ (lib.optionals (args ? extraNativeBuildInputs) args.extraNativeBuildInputs);
       postPatch = oldAttrs.postPatch + (lib.optionalString (args ? postPatch) args.postPatch);
+      configurePhase = ''
+        echo "-$(basename $out | cut -d - -f 1)" > localversion.nix
+      '' + oldAttrs.configurePhase;
     });
 
   patchSBCUBoot = pkg:
     pkg.overrideAttrs (oldAttrs: {
       extraConfig = (lib.optionalString (oldAttrs ? extraConfig) oldAttrs.extraConfig) + sbcExtraConfig;
       patches = oldAttrs.patches ++ sbcExtraPatches;
+      configurePhase = ''
+        echo "-$(basename $out | cut -d - -f 1)" > localversion.nix
+      '' + oldAttrs.configurePhase;
     });
 }
