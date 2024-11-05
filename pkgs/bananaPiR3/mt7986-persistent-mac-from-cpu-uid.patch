@@ -15,7 +15,7 @@ index 846c715ca0..69aa871663 100644
   * Author: Sam Shih <sam.shih@mediatek.com>
   */
  
-+#include <common.h>
++#include <linux/types.h>
 +#include <mapmem.h>
 +#include <hash.h>
 +#include <u-boot/sha1.h>

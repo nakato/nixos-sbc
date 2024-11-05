@@ -18,13 +18,11 @@
     filesToInstall = ["u-boot.itb" "idbloader.img" "u-boot-rockchip.bin" "u-boot-rockchip-spi.bin"];
   };
   overrideUbootAttrs = bVariant: oldAttrs: {
-    # 2024.07 DTS can be switched to upstream after 2024.10 release.
-    # as it has been synced with upstream.
     postPatch =
       oldAttrs.postPatch
       + ''
         cp ${./mmcboot.dtsi} arch/arm/dts/nixos-mmcboot.dtsi
-        cp ${./rk3588s-orangepi-5b.2024-07.dts} dts/upstream/src/arm64/rockchip/rk3588s-orangepi-5b.dts
+        cp ${./rk3588s-orangepi-5b.dts} dts/upstream/src/arm64/rockchip/rk3588s-orangepi-5b.dts
         cp ${./rk3588s-orangepi-5b-u-boot.dtsi} arch/arm/dts/rk3588s-orangepi-5b-u-boot.dtsi
       '';
     postConfigure = lib.optionalString bVariant ''
