@@ -68,6 +68,8 @@
     boot.initrd.includeDefaultModules = false;
     boot.initrd.kernelModules = ["mii"];
     boot.initrd.availableKernelModules = ["nvme"];
+    # When using systemd as stage 1, disable TPM support, as the vendor's kernel does not support tpm-tis.
+    boot.initrd.systemd.tpm2.enable = false;
 
     hardware.deviceTree.filter = "mt7988a-bananapi-bpi-r4.dtb";
     hardware.deviceTree.overlays = [
