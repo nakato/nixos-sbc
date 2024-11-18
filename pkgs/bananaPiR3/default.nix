@@ -86,6 +86,14 @@
         name = "PCI: mediatek-gen3: handle PERST after reset";
         patch = ./linux-mtk-pcie.patch;
       }
+      {
+        # Prevent crashing due to missing rates in wifi data
+        #
+        # See: https://forum.banana-pi.org/t/bpi-r3-crash-in-sta-set-sinfo-0xa18/15290
+        # https://github.com/openwrt/openwrt/issues/13198
+        name = "avoid-crashing-missing-band.patch";
+        patch = ./780-avoid-crashing-missing-band.patch;
+      }
     ];
 
     structuredExtraConfig = with lib.kernel; {
