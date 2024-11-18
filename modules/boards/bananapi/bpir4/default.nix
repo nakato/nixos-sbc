@@ -68,8 +68,6 @@
     boot.initrd.includeDefaultModules = false;
     boot.initrd.kernelModules = ["mii"];
     boot.initrd.availableKernelModules = ["nvme"];
-    # Disable TPM hard dependency in systemd based stage 1
-    boot.initrd.systemd.tpm2.enable = false;
 
     hardware.deviceTree.filter = "mt7988a-bananapi-bpi-r4.dtb";
     hardware.deviceTree.overlays = [
