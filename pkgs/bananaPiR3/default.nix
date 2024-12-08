@@ -86,6 +86,10 @@
         name = "PCI: mediatek-gen3: handle PERST after reset";
         patch = ./linux-mtk-pcie.patch;
       }
+      {
+        name = "avoid-crashing-missing-band.patch";
+        patch = ./780-avoid-crashing-missing-band.patch;
+      }
     ];
 
     structuredExtraConfig = with lib.kernel; {
