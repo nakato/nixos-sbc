@@ -96,6 +96,7 @@
       }
     ];
 
+    ignoreConfigErrors = true;
     structuredExtraConfig = with lib.kernel; {
       # Disable extremely unlikely features to reduce build storage requirements and time.
       FB = lib.mkForce no;

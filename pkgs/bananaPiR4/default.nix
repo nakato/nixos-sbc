@@ -71,6 +71,7 @@
   linuxPackages_frankw_6_12_bananaPiR4 = linuxKernel.packagesFor (linux_6_12.override {
     autoModules = false;
 
+    ignoreConfigErrors = true;
     structuredExtraConfig = with lib.kernel; {
       BTRFS_FS = module;
       BTRFS_FS_POSIX_ACL = yes;
