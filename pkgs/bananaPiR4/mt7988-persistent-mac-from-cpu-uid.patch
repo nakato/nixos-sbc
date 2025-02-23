@@ -43,7 +43,7 @@ index 846c715ca05..b1a6d11f77d 100644
 +	memcpy(cpu_uid, buf, 16);
 +	unmap_sysmem(buf);
 +
-+	sha1_csum(cpu_uid, 16, cpuid_digest);
++	sha1_csum_wd(cpu_uid, 16, cpuid_digest, SHA1_DEF_CHUNK_SZ);
 +
 +	memcpy(ethaddr0, cpuid_digest, 6);
 +	memcpy(ethaddr1, cpuid_digest, 6);

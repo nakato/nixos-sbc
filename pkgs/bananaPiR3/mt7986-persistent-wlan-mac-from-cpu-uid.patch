@@ -39,7 +39,7 @@ index 69aa871663..ee8c201d02 100644
  		puts("Generated ethaddr1 was invalid");
  	}
  
-+	sha1_csum(cpuid_digest, 20, ethsha_digest);
++	sha1_csum_wd(cpuid_digest, 20, ethsha_digest, SHA1_DEF_CHUNK_SZ);
 +
 +	memcpy(wifiaddr0, ethsha_digest, 6);
 +	memcpy(wifiaddr1, ethsha_digest + 6, 6);
