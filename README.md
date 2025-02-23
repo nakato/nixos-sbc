@@ -5,14 +5,6 @@ provide patched u-boot and kernel if required, and provide an abstraction
 to managing add-on hardware.
 
 
-## Support
-
-Providing support will allow me to spend more time on this as well as aquire
-new and interesting devices.
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nakatoio)
-
-
 ## Work in progress
 
 This is currently a work in progress.
