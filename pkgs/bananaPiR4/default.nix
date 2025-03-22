@@ -10,6 +10,8 @@
   linuxKernel,
   linux_6_12,
   lib,
+  which,
+  python3,
   ...
 }: rec {
   ubootBananaPiR4 =
@@ -59,12 +61,12 @@
       src = fetchFromGitHub {
         owner = "mtk-openwrt";
         repo = "arm-trusted-firmware";
-        # mtksoc HEAD 2024-08-02
-        rev = "bacca82a8cac369470df052a9d801a0ceb9b74ca";
-        hash = "sha256-n5D3styntdoKpVH+vpAfDkCciRJjCZf9ivrI9eEdyqw=";
+        # mtksoc HEAD 2025-03-12
+        rev = "e090770684e775711a624e68e0b28112227a4c38";
+        hash = "sha256-VI5OB2nWdXUjkSuUXl/0yQN+/aJp9Jkt+hy7DlL+PMg=";
       };
-      version = "2.10.0-mtk";
-      nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools];
+      version = "2.12.0-mtk";
+      nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools which python3];
     });
 
 
