@@ -10,6 +10,8 @@
   ncurses,
   pkg-config,
   ubootTools,
+  which,
+  python3,
   ...
 }: rec {
   ubootBananaPiR3 = buildSBCUBoot {
@@ -60,12 +62,12 @@
       src = fetchFromGitHub {
         owner = "mtk-openwrt";
         repo = "arm-trusted-firmware";
-        # mtksoc HEAD 2023-03-10
-        rev = "7539348480af57c6d0db95aba6381f3ee7483779";
-        hash = "sha256-OjM+metlaEzV7mXA8QHYEQd94p8zK34dLTqbyWQh1bQ=";
+        # mtksoc HEAD 2025-03-12
+        rev = "e090770684e775711a624e68e0b28112227a4c38";
+        hash = "sha256-VI5OB2nWdXUjkSuUXl/0yQN+/aJp9Jkt+hy7DlL+PMg=";
       };
-      version = "2.7.0-mtk";
-      nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools];
+      version = "2.12.0-mtk";
+      nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools which python3];
     });
 
   linuxPackages_6_11_bananaPiR3 = linuxKernel.packagesFor (linux_6_11.override {
