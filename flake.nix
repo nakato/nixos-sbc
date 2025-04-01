@@ -41,6 +41,10 @@
           manufacturer = "xunlong";
           model = "opi5b";
         }
+        {
+          manufacturer = "xunlong";
+          model = "opi5max";
+        }
       ];
 
       mkNixosConfigurations = builtins.listToAttrs (builtins.map
