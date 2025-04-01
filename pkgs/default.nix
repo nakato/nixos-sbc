@@ -12,5 +12,5 @@ in {
   inherit (bananaPiR4) armTrustedFirmwareMT7988 linuxPackages_frankw_latest_bananaPiR4 linuxPackages_frankw_6_12_bananaPiR4 ubootBananaPiR4;
   inherit (pine64rock64) ubootRock64 ubootRock64v2;
   inherit (raspberrypi) ubootRaspberryPi4 raspberryPiFirmware;
-  inherit (orangepi5) ubootOrangePi5 ubootOrangePi5b;
+  inherit (orangepi5) ubootOrangePi5 ubootOrangePi5b ubootOrangePi5Max;
 }
