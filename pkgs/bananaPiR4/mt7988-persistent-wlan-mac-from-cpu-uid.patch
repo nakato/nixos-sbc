@@ -1,0 +1,126 @@
+Generate persistent WiFi MAC addresses
+
+The BananaPi R4 can load its eeprom firmware from a file shipped in
+linux-firmware, but when this happens we have no way of setting the three
+independent mac addresses associated with the wireless interfaces.
+The mac addresses in this firmware use the MediaTek placeholder addresses,
+so they are not unique, so we move the eeprom to the devicetree and then patch
+the bytes in that to get consistent addresses.
+
+diff --git a/board/mediatek/mt7988/mt7988_rfb.c b/board/mediatek/mt7988/mt7988_rfb.c
+index 8d438d0af6c..861ea151be6 100644
+--- a/board/mediatek/mt7988/mt7988_rfb.c
++++ b/board/mediatek/mt7988/mt7988_rfb.c
+@@ -8,6 +8,10 @@
+ #include <hash.h>
+ #include <u-boot/sha1.h>
+ #include <net.h>
++#include <fdt_support.h>
++#include <errno.h>
++#include <linux/libfdt.h>
++#include <image.h>
+ 
+ int board_init(void)
+ {
+@@ -18,10 +22,14 @@ int board_late_init(void)
+ {
+ 	void *buf;
+ 	uint8_t cpuid_digest[20];
++	uint8_t ethsha_digest[20];
+ 	u8 cpu_uid[16];
+ 	u8 ethaddr0[6];
+ 	u8 ethaddr1[6];
+ 	u8 ethaddr2[6];
++	u8 wifiaddr0[6];
++	u8 wifiaddr1[6];
++	u8 wifiaddr2[6];
+ 
+ 	/*
+ 	 * 	No documentation, but it is said to be a burned in unique ID of the CPU.
+@@ -71,5 +79,86 @@ int board_late_init(void)
+ 		puts("Generated ethaddr2 was invalid\n");
+ 	}
+ 
++	sha1_csum(cpuid_digest, 20, ethsha_digest);
++
++	memcpy(wifiaddr0, ethsha_digest, 6);
++	memcpy(wifiaddr1, ethsha_digest + 6, 6);
++	memcpy(wifiaddr2, ethsha_digest + 12, 6);
++
++	wifiaddr0[0] &= 0xfe;
++	wifiaddr0[0] |= 0x02;
++
++	wifiaddr1[0] &= 0xfe;
++	wifiaddr1[0] |= 0x02;
++
++	wifiaddr2[0] &= 0xfe;
++	wifiaddr2[0] |= 0x02;
++
++	if (!is_valid_ethaddr(wifiaddr0)) {
++		puts("Generated wifiaddr0 was invalid: Using random\n");
++		net_random_ethaddr(wifiaddr0);
++	}
++	eth_env_set_enetaddr_by_index("wifi", 0, wifiaddr0);
++
++	if (!is_valid_ethaddr(wifiaddr1)) {
++		puts("Generated wifiaddr1 was invalid: Using random\n");
++		net_random_ethaddr(wifiaddr1);
++	}
++	eth_env_set_enetaddr_by_index("wifi", 1, wifiaddr1);
++
++	if (!is_valid_ethaddr(wifiaddr2)) {
++		puts("Generated wifiaddr2 was invalid: Using random\n");
++		net_random_ethaddr(wifiaddr2);
++	}
++	eth_env_set_enetaddr_by_index("wifi", 2, wifiaddr2);
++
++	return 0;
++}
++
++int ft_board_setup(void *blob, struct bd_info *bd){
++	int node;
++	int len = 4096;
++	int err;
++	u8 wifiaddr0[6];
++	u8 wifiaddr1[6];
++	u8 wifiaddr2[6];
++	const u8 *mt76ee;
++
++	err = eth_env_get_enetaddr_by_index("wifi", 0, wifiaddr0);
++	if (err < 0) {
++		puts("Wifi0 MAC from environment invalid, generating random address\n");
++		net_random_ethaddr(wifiaddr0);
++	}
++	err = eth_env_get_enetaddr_by_index("wifi", 1, wifiaddr1);
++	if (err < 0) {
++		puts("Wifi1 MAC from environment invalid, generating random address\n");
++		net_random_ethaddr(wifiaddr1);
++	}
++	err = eth_env_get_enetaddr_by_index("wifi", 2, wifiaddr2);
++	if (err < 0) {
++		puts("Wifi2 MAC from environment invalid, generating random address\n");
++		net_random_ethaddr(wifiaddr2);
++	}
++
++	node = fdt_path_offset(blob, "/soc/pcie@11300000/pcie@0,0/wifi@0,0");
++	if (node >= 0) {
++		mt76ee = fdt_getprop(blob, node, "mediatek,eeprom-data", &len);
++		if (!mt76ee) {
++			puts("Could not find 'mediatek,eeprom-data' property, WiFi Macs not patched.\n");
++			return 0;
++		}
++		memcpy(mt76ee + 0x0004, wifiaddr0, 6);
++		memcpy(mt76ee + 0x000a, wifiaddr1, 6);
++		memcpy(mt76ee + 0x02c0, wifiaddr2, 6);
++		err = fdt_setprop(blob, node, "mediatek,eeprom-data", mt76ee, len);
++		if (err < 0) {
++			printf("failed to set fdt for wifi: %s.\n", fdt_strerror(err));
++		}
++	} else {
++		// In SOC DTSI, should always exist, however outside of an upstream
++		// kernel it may be named something other than "wifi".
++		puts("Couldn't get WIFI DT offset\n");
++	}
++
+ 	return 0;
+ }

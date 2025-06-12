@@ -1,9 +1,12 @@
 {
+  config,
   lib,
   sbcPkgs,
   ...
 }: {
   imports = [
+    ./bootstrap.nix
+    ./wifi.nix
     ./sd-image-mt7988.nix
   ];
 
@@ -51,6 +54,11 @@
           enable = true;
         };
       };
+
+      wifi.devices.wifi = {
+        status = "okay";
+        # FIXME: disableMethod.dtOverlay = { ... dtsFile = ...; }
+      };
     };
 
     # Custom kernel is required as bpi-r4 does not have enough upstream support.
@@ -75,6 +83,11 @@
         name = "BananaPi bpir4 Enable SD card interface";
         dtsFile = ./mt7988a-bananapi-bpi-r4-sd.dts;
       }
-    ];
+    ] ++ (lib.optionals (!config.sbc.board.wifi.devices.wifi.enable) [
+      {
+        name = "BPiR4 Disable Wireless PCI Ports";
+        dtsFile = ./mt7988a-bananapi-bpi-r4-wirless-disable.dts;
+      }
+    ]);
   };
 }
