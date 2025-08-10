@@ -36,7 +36,8 @@ in {
 
     sbc.enable = true;
 
-    boot.kernelPackages = pkgs.linuxPackages_6_14;
+    # This can be removed once linux_default >= 6.14
+    boot.kernelPackages = pkgs.linuxPackages_6_16;
     hardware.deviceTree = {
       filter = "rk3588s*orangepi*.dtb";
     };

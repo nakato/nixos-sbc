@@ -6,7 +6,7 @@
   fetchFromGitHub,
   lib,
   linuxKernel,
-  linux_6_14,
+  linux_6_16,
   ncurses,
   pkg-config,
   ubootTools,
@@ -70,7 +70,7 @@
       nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [dtc ubootTools which python3];
     });
 
-  linuxPackages_6_14_bananaPiR3 = linuxKernel.packagesFor (linux_6_14.override {
+  linuxPackages_6_16_bananaPiR3 = linuxKernel.packagesFor (linux_6_16.override {
     kernelPatches = [
       {
         # Cold boot PCIe/NVMe have stability issues.
@@ -95,6 +95,14 @@
         # https://github.com/openwrt/openwrt/issues/13198
         name = "avoid-crashing-missing-band.patch";
         patch = ./780-avoid-crashing-missing-band.patch;
+      }
+      {
+        # CONFIG_HSR will get marked Y, but existing as M, blocks 
+        # CONFIG_NET_DSA from being built in.  So rip the line back
+        # out of defconfig so it can be selected later as Y as well.
+        name = "Make config ordering issue workaround";
+        patch = ./config_hsr_config_ordering.patch;
+
       }
     ];
 
@@ -156,11 +164,11 @@
   request its addition.  Even if it has been explicitly disabled below it is likely
   there won't be an issue re-enabling it.
   */
-  linuxPackages_6_14_bananaPiR3_minimal = linuxKernel.packagesFor (linuxPackages_6_14_bananaPiR3.kernel.override {
+  linuxPackages_6_16_bananaPiR3_minimal = linuxKernel.packagesFor (linuxPackages_6_16_bananaPiR3.kernel.override {
     autoModules = false;
 
     structuredExtraConfig = with lib.kernel;
-      linuxPackages_6_14_bananaPiR3.kernel.structuredExtraConfig
+      linuxPackages_6_16_bananaPiR3.kernel.structuredExtraConfig
       // {
         ARCH_ACTIONS = no;
         ARCH_SUNXI = no;
@@ -490,6 +498,6 @@
         SFP = module;
         MDIO_I2C = module;
       };
-  });
-  linuxPackages_latest_bananaPiR3 = linuxPackages_6_14_bananaPiR3;
+    });
+  linuxPackages_latest_bananaPiR3 = linuxPackages_6_16_bananaPiR3;
 }
