@@ -83,28 +83,11 @@ in {
           volumeLabel = "root";
           uuid = "18db6211-ac36-42c1-a22f-5e15e1486e0d";
           btrfs-progs = pkgs.btrfs-progs.overrideAttrs (oldAttrs: {
-            src = pkgs.fetchFromGitHub {
-              owner = "kdave";
-              repo = "btrfs-progs";
-              # devel 2024.09.10; Remove v6.11 release.
-              rev = "c75b2f2c77c9fdace08a57fe4515b45a4616fa21";
-              hash = "sha256-PgispmDnulTDeNnuEDdFO8FGWlGx/e4cP8MQMd9opFw=";
-            };
-
             patches = [
-              ./mkfs-btrfs-force-root-ownership.patch
+              ./mkfs-btrfs-force-root-ownership-and-time.patch
             ];
             postPatch = "";
 
-            nativeBuildInputs =
-              oldAttrs.nativeBuildInputs
-              ++ [
-                pkgs.autoconf
-                pkgs.automake
-              ];
-            preConfigure = "./autogen.sh";
-
-            version = "6.11.0.pre";
           });
           populateImageCommands = ''
             mkdir ./files/boot
