@@ -12,8 +12,11 @@
   ubootTools,
   which,
   python3,
+  fetchurl,
   ...
-}: rec {
+}: let
+  version = "2025.04";
+in rec {
   ubootBananaPiR3 = buildSBCUBoot {
     defconfig = "mt7986a_bpir3_sd_defconfig";
     extraMeta.platforms = ["aarch64-linux"];
@@ -49,6 +52,12 @@
     '';
     # FIXME: Should bl2 bundle here?
     filesToInstall = ["bl2.img" "fip.bin"];
+
+    inherit version;
+    src = fetchurl {
+      url = "https://ftp.denx.de/pub/u-boot/u-boot-${version}.tar.bz2";
+      hash = "sha256-Q5077ylu/9VBML5qcxxbEYvn/d1/zGY8y8X7GClNhxg=";
+    };
   };
 
   armTrustedFirmwareMT7986 =
