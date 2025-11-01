@@ -8,10 +8,11 @@
   pkg-config,
   ubootTools,
   linuxKernel,
-  linux_6_12,
+  linux_6_17,
   lib,
   which,
   python3,
+  fetchpatch2,
   ...
 }: rec {
   ubootBananaPiR4 =
@@ -70,7 +71,7 @@
     });
 
 
-  linuxPackages_frankw_6_12_bananaPiR4 = linuxKernel.packagesFor (linux_6_12.override {
+  linuxPackages_frankw_6_17_bananaPiR4 = linuxKernel.packagesFor (linux_6_17.override {
     autoModules = false;
 
     ignoreConfigErrors = true;
@@ -247,16 +248,14 @@
       NFT_XFRM = module;
     };
 
+    kernelPatches = import ./kernel_patches.nix {
+      inherit fetchpatch2;
+    };
+
     argsOverride = {
-      src = fetchFromGitHub {
-        owner = "frank-w";
-        repo = "BPI-Router-Linux";
-        # 6.12-main HEAD 2025-04-11
-        rev = "d814d01a79010a26c1bdf5bee4827779e3c5a148";
-        hash = "sha256-KHMXDQ3AohOFbKNMRhPhracT9Hxm2lVi8QyNaiDnrlE=";
-      };
-      version = "6.12.23-bpi-r4";
-      modDirVersion = "6.12.23-bpi-r4";
+      version = "${linux_6_17.version}-bpi-r4";
+      modDirVersion = "${linux_6_17.version}-bpi-r4";
+      ignoreConfigErrors = true;
     };
 
     defconfig = "mt7988a_bpi-r4_defconfig";
@@ -264,5 +263,5 @@
     extraMeta.vendorKernel = true;
   });
 
-  linuxPackages_frankw_latest_bananaPiR4 = linuxPackages_frankw_6_12_bananaPiR4;
+  linuxPackages_frankw_latest_bananaPiR4 = linuxPackages_frankw_6_17_bananaPiR4;
 }
