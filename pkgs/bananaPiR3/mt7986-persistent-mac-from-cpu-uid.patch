@@ -8,10 +8,10 @@ Use the system CPU ID to give us a stable but unique set of bytes that we then
 hash to get more bytes.  We hash the hash when we need more bytes.
 
 diff --git a/board/mediatek/mt7986/mt7986_rfb.c b/board/mediatek/mt7986/mt7986_rfb.c
-index 846c715ca0..69aa871663 100644
+index 0ca87a88aed..ff03e280523 100644
 --- a/board/mediatek/mt7986/mt7986_rfb.c
 +++ b/board/mediatek/mt7986/mt7986_rfb.c
-@@ -4,6 +4,55 @@
+@@ -4,3 +4,51 @@
   * Author: Sam Shih <sam.shih@mediatek.com>
   */
  
@@ -63,17 +63,13 @@ index 846c715ca0..69aa871663 100644
 +
 +	return 0;
 +}
-+
- int board_init(void)
- {
- 	return 0;
 diff --git a/include/configs/mt7986.h b/include/configs/mt7986.h
-index 0c41af1fc3..a890f9f08e 100644
+index 090b4c6833e..22013259b6b 100644
 --- a/include/configs/mt7986.h
 +++ b/include/configs/mt7986.h
-@@ -18,4 +18,6 @@
- /* DRAM */
- #define CFG_SYS_SDRAM_BASE		0x40000000
+@@ -9,4 +9,6 @@
+ #ifndef __MT7986_H
+ #define __MT7986_H
  
 +#define FDT_SEQ_MACADDR_FROM_ENV
 +
