@@ -60,7 +60,7 @@ Not all devices are supported on all boards.
   description = "NixOS configuration with flakes";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-sbc.url = "github:nakato/nixos-sbc/master";
+    nixos-sbc.url = "github:nakato/nixos-sbc";
   };
 
   outputs = { self, nixpkgs, nixos-sbc }: {
