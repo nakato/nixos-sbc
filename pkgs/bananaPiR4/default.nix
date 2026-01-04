@@ -21,6 +21,7 @@
       extraNativeBuildInputs = [pkg-config ncurses armTrustedFirmwareTools];
       extraPatches = [
         ./mt7988-persistent-mac-from-cpu-uid.patch
+        ./mt7988-persistent-wlan-mac-from-cpu-uid.patch
       ];
       postPatch = ''
         cp ${./mt7988-nixos.env} board/mediatek/mt7988/mt7988-nixos.env
@@ -41,6 +42,7 @@
         # The following are used in the tooling to fixup MAC addresses
         CONFIG_BOARD_LATE_INIT=y
         CONFIG_SHA1=y
+        CONFIG_OF_BOARD_SETUP=y
       '';
       postBuild = ''
         fiptool create --soc-fw ${armTrustedFirmwareMT7988}/bl31.bin --nt-fw u-boot.bin fip.bin
