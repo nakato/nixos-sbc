@@ -251,12 +251,12 @@
       src = fetchFromGitHub {
         owner = "frank-w";
         repo = "BPI-Router-Linux";
-        # 6.12-main HEAD 2025-12-30
-        rev = "372986976784d1d4c593f217046162f9189c9713";
-        hash = "sha256-JGKa8dvOPoDimH5lY4SxXZnfBqRiGj/JxEpBT8dYTTM=";
+        # 6.12-main HEAD 2026-06-03
+        rev = "4a4506842b77b597f11e7fc53be1dcdbdc97eea9";
+        hash = "sha256-5ohqBf56qw1zPn+tTQRPKRJtMdjutrDR1Df6h3KWvXs=";
       };
-      version = "6.12.63-bpi-r4";
-      modDirVersion = "6.12.63-bpi-r4";
+      version = "6.12.82-bpi-r4";
+      modDirVersion = "6.12.82-bpi-r4";
     };
 
     defconfig = "mt7988a_bpi-r4_defconfig";
